@@ -42,5 +42,5 @@ curl -O https://raw.githubusercontent.com/waylonwang/sh-scripts/master/synology_
 
 chmod +x synology_acme_install.sh
 
-./synology_acme_install.sh
+./synology_acme_install.sh --create
 ```

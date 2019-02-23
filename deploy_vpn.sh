@@ -60,11 +60,11 @@ create_nginx_conf()
   local domain
   local local
   local port
-  echo -e "\033[31mWhat is the domain name of the server?\033[0m"
+  echo -e "\033[36mWhat is the domain name of the server?\033[0m"
   read domain
-  echo -e "\033[31mWhat is local IP?\033[0m"
+  echo -e "\033[36mWhat is local IP?\033[0m"
   read local
-  echo -e "\033[31mWhat is the portainer local port?\033[0m"
+  echo -e "\033[36mWhat is the portainer local port?\033[0m"
   read port
 
   echo "server {" >> $file_name
@@ -91,9 +91,9 @@ create_shadowsocks_conf()
   local file_name="shadowsocks/conf/config.json"
   local port
   local password
-  echo -e "\033[31mWhat is the port of shadowsocks service?\033[0m"
+  echo -e "\033[36mWhat is the port of shadowsocks service?\033[0m"
   read port
-  echo -e "\033[31mWhat is the password of the shadowsocks service?\033[0m"
+  echo -e "\033[36mWhat is the password of the shadowsocks service?\033[0m"
   read password
 
   echo "{" >> $file_name
@@ -113,9 +113,9 @@ create_shadowsocksr_conf()
   local file_name="shadowsocks-r/conf/config.json"
   local port
   local password
-  echo -e "\033[31mWhat is the port of the shadowsocks-r service?\033[0m"
+  echo -e "\033[36mWhat is the port of the shadowsocks-r service?\033[0m"
   read port
-  echo -e "\033[31mWhat is the password of the shadowsocks-r service?\033[0m"
+  echo -e "\033[36mWhat is the password of the shadowsocks-r service?\033[0m"
   read password
 
   echo "{" >> $file_name
@@ -144,11 +144,11 @@ create_l2tp_conf()
   local user
   local password
   local psk
-  echo -e "\033[31mWhat is the l2tp username?\033[0m"
+  echo -e "\033[36mWhat is the l2tp username?\033[0m"
   read user
-  echo -e "\033[31mWhat is the l2tp password?\033[0m"
+  echo -e "\033[36mWhat is the l2tp password?\033[0m"
   read password
-  echo -e "\033[31mWhat is the l2tp psk?\033[0m"
+  echo -e "\033[36mWhat is the l2tp psk?\033[0m"
   read psk
 
   echo "VPN_IPSEC_PSK="$psk >> $file_name
@@ -169,11 +169,11 @@ create_ocserv_conf()
   local file_name="ocserv/conf/ocserv.env"
   local domain
   local org
-  echo -e "\033[31mWhat is the cert domain name of the ocserv service?\033[0m"
+  echo -e "\033[36mWhat is the cert domain name of the ocserv service?\033[0m"
   read domain
-  echo -e "\033[31mWhat is the cert org name of the ocserv service?\033[0m"
+  echo -e "\033[36mWhat is the cert org name of the ocserv service?\033[0m"
   read org
-  echo -e "\033[31mWhat is the username to add?\033[0m"
+  echo -e "\033[36mWhat is the username to add?\033[0m"
   read ocserv_user
 
   ocserv_init="on"
@@ -291,7 +291,7 @@ check_compose_installed
 check_docker_actived
 
 if [ $error_status == "on" ]; then
-  echo -e "\033[31m[Fault] docker failed to startup.\033[0m"
+  echo -e "\033[36m[Fault] docker failed to startup.\033[0m"
 else
   init_config_folder
 

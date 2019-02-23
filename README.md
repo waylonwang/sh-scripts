@@ -1,5 +1,8 @@
 # Linux shell scripts
+[![License](https://img.shields.io/badge/License-MIT-orange.svg)](https://github.com/waylonwang/sh-scripts/master/LICENSE)
+
 常用Linux shell脚本集合
+
 ## deploy_vpn.sh
 VPS一键部署各种VPN类服务的脚本，VPN类服务包含shadowsocks、shadowsocks-r、ocserv、L2TP等，基础服务则包括nginx及portainer，以上服务全部以docker容器方式部署，docker镜像分别取自：
 * teddysun/shadowsocks-libev:alpine

@@ -4,7 +4,7 @@ check_docker_installed()
 {
   if [ -x "$(command -v docker)" ]; then
       echo -e "\033[35m`docker --version`\033[0m"
-      echo -e "\033[32m[OK] docker has installed.\033[0m"
+      echo -e "\033[32m[OK] docker has been installed.\033[0m"
   else
       echo -e "\033[33m\Installing docker.\033[0m"
       yum -y install docker

@@ -22,7 +22,7 @@ check_docker_actived()
     if [ $status == "active" ]; then
       echo -e "\033[32m[OK] docker is running.\033[0m"
     else
-      echo -e "\033[33m\Starting docker.\033[0m"
+      echo -e "\033[33mStarting docker.\033[0m"
       systemctl start docker
       status=`systemctl show --property ActiveState docker | sed -n -r '1,1 s/ActiveState=(.*)/\1/p'`
       if [ $status ]; then
@@ -31,6 +31,7 @@ check_docker_actived()
         else
           error_status="on"
         fi
+      else
         error_status="on"
       fi
     fi

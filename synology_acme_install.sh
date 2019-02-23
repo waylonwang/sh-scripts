@@ -21,7 +21,7 @@ ACME_PATH="/usr/local/share/acme.sh"
 # 以下为处理脚本，不懂的请勿随意修改
 NAME="installcert.sh"
 VER="1.0"
-URL="https://github.com/waylonwang/installcert/installcert.sh"
+URL="https://github.com/waylonwang/sh-scripts/synology_acme_install.sh"
 HELP="用法: ./${NAME} <命令> [<参数>]\n
 命令:\n
 \t--create,-c\t\t创建证书\n

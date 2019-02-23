@@ -6,7 +6,7 @@ check_docker_installed()
       echo -e "\033[35m`docker --version`\033[0m"
       echo -e "\033[32m[OK] docker has been installed.\033[0m"
   else
-      echo -e "\033[33m\Installing docker.\033[0m"
+      echo -e "\033[33mInstalling docker.\033[0m"
       yum -y install docker
       echo -e "\033[35m`docker --version`\033[0m"
       systemctl start docker
@@ -17,14 +17,14 @@ check_docker_installed()
 
 check_docker_actived()
 {
-  local status=`systemctl show --property ActiveState docker | sed -n -r '1,1 s/ActiveState=(.*)/\1/p'`
+  local status=`systemctl is-active docker`
   if [ $status ]; then
     if [ $status == "active" ]; then
       echo -e "\033[32m[OK] docker is running.\033[0m"
     else
       echo -e "\033[33mStarting docker.\033[0m"
       systemctl start docker
-      status=`systemctl show --property ActiveState docker | sed -n -r '1,1 s/ActiveState=(.*)/\1/p'`
+      status=`systemctl is-active docker`
       if [ $status ]; then
         if [ $status == "active" ]; then
           echo -e "\033[32m[OK] docker is running.\033[0m"
@@ -42,7 +42,7 @@ check_docker_actived()
 
 create_nginx_conf()
 {
-  local file_name = "nginx/conf/"$domain".conf"
+  local file_name="nginx/conf/"$domain".conf"
   local domain
   local local
   local port
@@ -74,7 +74,7 @@ create_nginx_conf()
 
 create_shadowsocks_conf()
 {
-  local file_name = "shadowsocks/conf/config.json"
+  local file_name="shadowsocks/conf/config.json"
   local port
   local password
   echo -e "\033[31mWhat is the port of shadowsocks service?\033[0m"
@@ -96,7 +96,7 @@ create_shadowsocks_conf()
 
 create_shadowsocksr_conf()
 {
-  local file_name = "shadowsocks-r/conf/config.json"
+  local file_name="shadowsocks-r/conf/config.json"
   local port
   local password
   echo -e "\033[31mWhat is the port of the shadowsocks-r service?\033[0m"
@@ -126,7 +126,7 @@ create_shadowsocksr_conf()
 
 create_l2tp_conf()
 {
-  local file_name = "l2tp/conf/l2tp.env"
+  local file_name="l2tp/conf/l2tp.env"
   local user
   local password
   local psk
@@ -152,7 +152,7 @@ create_l2tp_conf()
 
 create_ocserv_conf()
 {
-  local file_name = "ocserv/conf/ocserv.env"
+  local file_name="ocserv/conf/ocserv.env"
   local domain
   local org
   echo -e "\033[31mWhat is the cert domain name of the ocserv service?\033[0m"

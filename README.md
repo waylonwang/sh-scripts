@@ -1,5 +1,5 @@
 # Linux shell scripts
-[![License](https://img.shields.io/badge/License-MIT-orange.svg)](https://github.com/waylonwang/sh-scripts/master/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-orange.svg)](https://github.com/waylonwang/sh-scripts/blob/master/LICENSE)
 
 常用Linux shell脚本集合
 

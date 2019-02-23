@@ -10,7 +10,7 @@ VPS一键部署各种VPN类服务的脚本，VPN类服务包含shadowsocks、sha
 * portainer/portainer
 
 > 此脚本目前暂时仅支持CentOS系统
-
+>
 > 此脚本由waylonwang/docker-compose的base.yml、vpn.yml及其sh执行脚本提供的docker容器部署的支持
 
 安装方法：

@@ -60,9 +60,9 @@ create_nginx_conf()
   local domain
   local ip
   local port
-  read -p $'Input the \e[36mdomain name\e[0m of the server : ' domain
-  read -p $'Input the \e[36mlocal IP\e[0m : ' ip
-  read -p $'Input the \e[36mportainer local port\e[0m : ' port
+  read -p $'Input the \e[36mdomain name\e[0m of the server: ' domain
+  read -p $'Input the \e[36mlocal IP\e[0m of the server: ' ip
+  read -p $'Input the \e[36mlocal port\e[0m of the portainer service: ' port
 
   echo "server {" >> $file_name
   echo "        listen          80;" >> $file_name
@@ -88,8 +88,8 @@ create_shadowsocks_conf()
   local file_name="shadowsocks/conf/config.json"
   local port
   local password
-  read -p $'Input the \e[36mport\e[0m of shadowsocks service : ' port
-  read -p $'Input the \e[36mpassword\e[0m of shadowsocks service : ' password
+  read -p $'Input the \e[36mport\e[0m of the shadowsocks service: ' port
+  read -p $'Input the \e[36mpassword\e[0m of the shadowsocks service: ' password
 
   echo "{" >> $file_name
   echo "        \"server\":\"0.0.0.0\"," >> $file_name
@@ -108,8 +108,8 @@ create_shadowsocksr_conf()
   local file_name="shadowsocks-r/conf/config.json"
   local port
   local password
-  read -p $'Input the \e[36mport\e[0m of shadowsocks-r service : ' port
-  read -p $'Input the \e[36mpassword\e[0m of shadowsocks-r service : ' password
+  read -p $'Input the \e[36mport\e[0m of the shadowsocks-r service: ' port
+  read -p $'Input the \e[36mpassword\e[0m of the shadowsocks-r service: ' password
 
   echo "{" >> $file_name
   echo "        \"server\":\"0.0.0.0\"," >> $file_name
@@ -137,9 +137,9 @@ create_l2tp_conf()
   local user
   local password
   local psk
-  read -p $'Input the \e[36musername\e[0m of the l2tp service : ' user
-  read -p $'Input the \e[36mpassword\e[0m of the l2tp service : ' password
-  read -p $'Input the \e[36mpsk\e[0m of the l2tp service : ' psk
+  read -p $'Input the \e[36musername\e[0m of the l2tp service: ' user
+  read -p $'Input the \e[36mpassword\e[0m of the l2tp service: ' password
+  read -p $'Input the \e[36mpsk\e[0m of the l2tp service: ' psk
 
   echo "VPN_IPSEC_PSK="$psk >> $file_name
   echo "VPN_USER="$user >> $file_name
@@ -159,9 +159,9 @@ create_ocserv_conf()
   local file_name="ocserv/conf/ocserv.env"
   local domain
   local org
-  read -p $'Input the \e[36mcert domain name\e[0m of the ocserv service : ' domain
-  read -p $'Input the \e[36mcert org name\e[0m of the ocserv service : ' org
-  read -p $'Input the \e[36musername\e[0m to add : ' ocserv_user
+  read -p $'Input the \e[36mcert domain name\e[0m of the ocserv service: ' domain
+  read -p $'Input the \e[36mcert org name\e[0m of the ocserv service: ' org
+  read -p $'Input the \e[36musername\e[0m add to ocserv service: ' ocserv_user
 
   ocserv_init="on"
 
@@ -268,27 +268,33 @@ ocserv_add_users()
 
 echo -e "\033[35mStart deploying VPN\033[0m"
 
+source /etc/os-release
+
 error_status="off"
 ocserv_init="off"
 
-check_docker_installed
+if [ $ID == "centos" ]; then
+  check_docker_installed
 
-check_compose_installed
+  check_compose_installed
 
-check_docker_actived
+  check_docker_actived
 
-if [ $error_status == "on" ]; then
-  echo -e "\033[36m[Fault] docker failed to startup.\033[0m"
-else
-  init_config_folder
+  if [ $error_status == "on" ]; then
+    echo -e "\033[36m[Fault] docker failed to startup.\033[0m"
+  else
+    init_config_folder
 
-  download_compose_file
+    download_compose_file
 
-  compose_all_file
+    compose_all_file
 
-  if [ $ocserv_init == "on" ]; then
-    ocserv_add_users
+    if [ $ocserv_init == "on" ]; then
+      ocserv_add_users
+    fi
+
+    echo -e "\033[32m[OK] VPN deployment has been completed.\033[0m"
   fi
-
-  echo -e "\033[32m[OK] VPN deployment has been completed.\033[0m"
+else
+  echo -e "\033[36m[Fault] This script only supports Centos.\033[0m"
 fi

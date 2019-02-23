@@ -1,4 +1,6 @@
 #! /bin/bash
+# Copyright (c) 2019 Waylon Wang <waylon@waylon.wang>
+# Licensed under the MIT License
 
 check_docker_installed()
 {

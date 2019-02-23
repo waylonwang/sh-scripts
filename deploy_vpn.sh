@@ -34,6 +34,8 @@ check_docker_actived()
         error_status="on"
       fi
     fi
+  else
+    error_status="on"
   fi
 }
 

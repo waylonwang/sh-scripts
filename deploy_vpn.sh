@@ -281,7 +281,7 @@ if [ $ID == "centos" ]; then
   check_docker_actived
 
   if [ $error_status == "on" ]; then
-    echo -e "\033[36m[Fault] docker failed to startup.\033[0m"
+    echo -e "\033[31m[Fault] docker failed to startup.\033[0m"
   else
     init_config_folder
 
@@ -296,5 +296,5 @@ if [ $ID == "centos" ]; then
     echo -e "\033[32m[OK] VPN deployment has been completed.\033[0m"
   fi
 else
-  echo -e "\033[36m[Fault] This script only supports Centos.\033[0m"
+  echo -e "\033[31m[Fault] This script only supports CentOS.\033[0m"
 fi

@@ -1,18 +1,4 @@
 #! /bin/bash
-# Copyright (c) 2019 Waylon Wang <waylon@waylon.wang>
-# Licensed under the MIT License
-
-#*************************************************************************************
-# 本脚本用于VPS一键部署VPN类服务
-#   * VPN类服务包含shadowsocks、shadowsocks-r、ocserv、L2TP等
-#   * 基础服务则包括nginx及portainer
-# 本脚本仅适用于CentOS系统，不支持ubuntu/debian等Linux发行版
-# 本脚本由waylonwang/docker-compose的编排脚本及其sh执行脚本提供docker容器部署的支持
-#   * base.yml
-#   * vpn.yml
-#
-# 作者:waylon@waylon.wang
-#*************************************************************************************
 
 check_docker_installed()
 {
@@ -70,13 +56,13 @@ check_docker_actived()
 
 create_nginx_conf()
 {
-  local file_name="nginx/conf/"$domain".conf"
   local domain
   local ip
   local port
   read -p $'Input the \e[36mdomain name\e[0m of the server: ' domain
   read -p $'Input the \e[36mlocal IP\e[0m of the server: ' ip
   read -p $'Input the \e[36mlocal port\e[0m of the portainer service: ' port
+  local file_name="nginx/conf/"$domain".conf"
 
   echo "server {" >> $file_name
   echo "        listen          80;" >> $file_name

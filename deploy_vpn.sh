@@ -58,14 +58,11 @@ create_nginx_conf()
 {
   local file_name="nginx/conf/"$domain".conf"
   local domain
-  local local
+  local ip
   local port
-  echo -e "\033[36mWhat is the domain name of the server?\033[0m"
-  read domain
-  echo -e "\033[36mWhat is local IP?\033[0m"
-  read local
-  echo -e "\033[36mWhat is the portainer local port?\033[0m"
-  read port
+  read -p $"\e[36mmInput the domain name of the server\e[0m : " domain
+  read -p $"\e[36mmInput the local IP\e[0m : " ip
+  read -p $"\e[36mmInput the portainer local port\e[0m : " port
 
   echo "server {" >> $file_name
   echo "        listen          80;" >> $file_name
@@ -74,7 +71,7 @@ create_nginx_conf()
   echo "        error_log       /var/log/nginx/"$domain"_docker_error.log info;" >> $file_name
   echo " " >> $file_name
   echo "        location / {" >> $file_name
-  echo "                proxy_pass              http://"$local":"$port"/;" >> $file_name
+  echo "                proxy_pass              http://"$ip":"$port"/;" >> $file_name
   echo "                proxy_read_timeout      300;" >> $file_name
   echo "                proxy_connect_timeout   300;" >> $file_name
   echo "                proxy_redirect          off;" >> $file_name
@@ -91,10 +88,8 @@ create_shadowsocks_conf()
   local file_name="shadowsocks/conf/config.json"
   local port
   local password
-  echo -e "\033[36mWhat is the port of shadowsocks service?\033[0m"
-  read port
-  echo -e "\033[36mWhat is the password of the shadowsocks service?\033[0m"
-  read password
+  read -p $"\e[36mmInput the port of shadowsocks service\e[0m : " port
+  read -p $"\e[36mmInput the password of the shadowsocks service\e[0m : " password
 
   echo "{" >> $file_name
   echo "        \"server\":\"0.0.0.0\"," >> $file_name
@@ -113,10 +108,8 @@ create_shadowsocksr_conf()
   local file_name="shadowsocks-r/conf/config.json"
   local port
   local password
-  echo -e "\033[36mWhat is the port of the shadowsocks-r service?\033[0m"
-  read port
-  echo -e "\033[36mWhat is the password of the shadowsocks-r service?\033[0m"
-  read password
+  read -p $"\e[36mmInput the port of the shadowsocks-r service\e[0m : " port
+  read -p $"\e[36mmInput the password of the shadowsocks-r service\e[0m : " password
 
   echo "{" >> $file_name
   echo "        \"server\":\"0.0.0.0\"," >> $file_name
@@ -144,12 +137,9 @@ create_l2tp_conf()
   local user
   local password
   local psk
-  echo -e "\033[36mWhat is the l2tp username?\033[0m"
-  read user
-  echo -e "\033[36mWhat is the l2tp password?\033[0m"
-  read password
-  echo -e "\033[36mWhat is the l2tp psk?\033[0m"
-  read psk
+  read -p $"\e[36mmInput the username of the l2tp service\e[0m : " user
+  read -p $"\e[36mmInput the password of the l2tp service\e[0m : " password
+  read -p $"\e[36mmInput the psk of the l2tp service\e[0m : " psk
 
   echo "VPN_IPSEC_PSK="$psk >> $file_name
   echo "VPN_USER="$user >> $file_name
@@ -169,12 +159,9 @@ create_ocserv_conf()
   local file_name="ocserv/conf/ocserv.env"
   local domain
   local org
-  echo -e "\033[36mWhat is the cert domain name of the ocserv service?\033[0m"
-  read domain
-  echo -e "\033[36mWhat is the cert org name of the ocserv service?\033[0m"
-  read org
-  echo -e "\033[36mWhat is the username to add?\033[0m"
-  read ocserv_user
+  read -p $"\e[36mmInput the cert domain name of the ocserv service?\e[0m : " domain
+  read -p $"\e[36mmInput the cert org name of the ocserv service?\e[0m : " org
+  read -p $"\e[36mmInput the username to add?\e[0m : " ocserv_user
 
   ocserv_init="on"
 

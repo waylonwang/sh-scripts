@@ -92,14 +92,14 @@ create_shadowsocks_conf()
   read -p $'Input the \e[36mpassword\e[0m of the shadowsocks service: ' password
 
   echo "{" >> $file_name
-  echo "        \"server\":\"0.0.0.0\"," >> $file_name
-  echo "        \"server_port\":"$port"," >> $file_name
-  echo "        \"password\":\""$password"\"," >> $file_name
-  echo "        \"timeout\":300," >> $file_name
-  echo "        \"method\":\"aes-256-cfb\"," >> $file_name
-  echo "        \"fast_open\":true," >> $file_name
-  echo "        \"nameserver\":\"8.8.8.8\"," >> $file_name
-  echo "        \"mode\":\"tcp_and_udp\"," >> $file_name 
+  echo "    \"server\":\"0.0.0.0\"," >> $file_name
+  echo "    \"server_port\":"$port"," >> $file_name
+  echo "    \"password\":\""$password"\"," >> $file_name
+  echo "    \"timeout\":300," >> $file_name
+  echo "    \"method\":\"aes-256-cfb\"," >> $file_name
+  echo "    \"fast_open\":true," >> $file_name
+  echo "    \"nameserver\":\"8.8.8.8\"," >> $file_name
+  echo "    \"mode\":\"tcp_and_udp\"" >> $file_name 
   echo "}" >> $file_name
 }
 
@@ -112,22 +112,22 @@ create_shadowsocksr_conf()
   read -p $'Input the \e[36mpassword\e[0m of the shadowsocks-r service: ' password
 
   echo "{" >> $file_name
-  echo "        \"server\":\"0.0.0.0\"," >> $file_name
-  echo "        \"server_ipv6\":\"::\"," >> $file_name
-  echo "        \"server_port\":"$port"," >> $file_name
-  echo "        \"local_address\":\"127.0.0.1\"," >> $file_name
-  echo "        \"local_port\":1080," >> $file_name
-  echo "        \"password\":\""$password"\"," >> $file_name
-  echo "        \"timeout\":300," >> $file_name
-  echo "        \"method\":\"aes-256-cfb\"," >> $file_name
-  echo "        \"protocol\":\"origin\"," >> $file_name 
-  echo "        \"protocol_param\":\"\"," >> $file_name 
-  echo "        \"obfs\":\"plain\"," >> $file_name 
-  echo "        \"obfs_param\":\"\"," >> $file_name 
-  echo "        \"redirect\":\"\"," >> $file_name 
-  echo "        \"dns_ipv6\":false," >> $file_name 
-  echo "        \"fast_open\":true," >> $file_name
-  echo "        \"workers\":1," >> $file_name
+  echo "    \"server\":\"0.0.0.0\"," >> $file_name
+  echo "    \"server_ipv6\":\"::\"," >> $file_name
+  echo "    \"server_port\":"$port"," >> $file_name
+  echo "    \"local_address\":\"127.0.0.1\"," >> $file_name
+  echo "    \"local_port\":1080," >> $file_name
+  echo "    \"password\":\""$password"\"," >> $file_name
+  echo "    \"timeout\":120," >> $file_name
+  echo "    \"method\":\"aes-256-cfb\"," >> $file_name
+  echo "    \"protocol\":\"origin\"," >> $file_name 
+  echo "    \"protocol_param\":\"\"," >> $file_name 
+  echo "    \"obfs\":\"plain\"," >> $file_name 
+  echo "    \"obfs_param\":\"\"," >> $file_name 
+  echo "    \"redirect\":\"\"," >> $file_name 
+  echo "    \"dns_ipv6\":false," >> $file_name 
+  echo "    \"fast_open\":true," >> $file_name
+  echo "    \"workers\":1" >> $file_name
   echo "}" >> $file_name
 }
 

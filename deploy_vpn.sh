@@ -60,9 +60,9 @@ create_nginx_conf()
   local domain
   local ip
   local port
-  read -p $'\e[36mInput the domain name of the server\e[0m : ' domain
-  read -p $'\e[36mInput the local IP\e[0m : ' ip
-  read -p $'\e[36mInput the portainer local port\e[0m : ' port
+  read -p $'Input the \e[36mdomain name\e[0m of the server : ' domain
+  read -p $'Input the \e[36mlocal IP\e[0m : ' ip
+  read -p $'Input the \e[36mportainer local port\e[0m : ' port
 
   echo "server {" >> $file_name
   echo "        listen          80;" >> $file_name
@@ -88,8 +88,8 @@ create_shadowsocks_conf()
   local file_name="shadowsocks/conf/config.json"
   local port
   local password
-  read -p $'\e[36mInput the port of shadowsocks service\e[0m : ' port
-  read -p $'\e[36mInput the password of the shadowsocks service\e[0m : ' password
+  read -p $'Input the \e[36mport\e[0m of shadowsocks service : ' port
+  read -p $'Input the \e[36mpassword\e[0m of shadowsocks service : ' password
 
   echo "{" >> $file_name
   echo "        \"server\":\"0.0.0.0\"," >> $file_name
@@ -108,8 +108,8 @@ create_shadowsocksr_conf()
   local file_name="shadowsocks-r/conf/config.json"
   local port
   local password
-  read -p $'\e[36mInput the port of the shadowsocks-r service\e[0m : ' port
-  read -p $'\e[36mInput the password of the shadowsocks-r service\e[0m : ' password
+  read -p $'Input the \e[36mport\e[0m of shadowsocks-r service : ' port
+  read -p $'Input the \e[36mpassword\e[0m of shadowsocks-r service : ' password
 
   echo "{" >> $file_name
   echo "        \"server\":\"0.0.0.0\"," >> $file_name
@@ -137,9 +137,9 @@ create_l2tp_conf()
   local user
   local password
   local psk
-  read -p $'\e[36mInput the username of the l2tp service\e[0m : ' user
-  read -p $'\e[36mInput the password of the l2tp service\e[0m : ' password
-  read -p $'\e[36mInput the psk of the l2tp service\e[0m : ' psk
+  read -p $'Input the \e[36musername\e[0m of the l2tp service : ' user
+  read -p $'Input the \e[36mpassword\e[0m of the l2tp service : ' password
+  read -p $'Input the \e[36mpsk\e[0m of the l2tp service : ' psk
 
   echo "VPN_IPSEC_PSK="$psk >> $file_name
   echo "VPN_USER="$user >> $file_name
@@ -159,9 +159,9 @@ create_ocserv_conf()
   local file_name="ocserv/conf/ocserv.env"
   local domain
   local org
-  read -p $'\e[36mInput the cert domain name of the ocserv service?\e[0m : ' domain
-  read -p $'\e[36mInput the cert org name of the ocserv service?\e[0m : ' org
-  read -p $'\e[36mInput the username to add?\e[0m : ' ocserv_user
+  read -p $'Input the \e[36mcert domain name\e[0m of the ocserv service : ' domain
+  read -p $'Input the \e[36mcert org name\e[0m of the ocserv service : ' org
+  read -p $'Input the \e[36musername\e[0m to add : ' ocserv_user
 
   ocserv_init="on"
 

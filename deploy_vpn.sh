@@ -247,9 +247,11 @@ download_compose_file()
 compose_all_file()
 {
   echo -e "\033[33mComposing the base services.\033[0m"
+  chmod 777 compose_base.sh
   ./compose_base.sh
   echo -e "\033[32m[OK] all base services is up.\033[0m"
   echo -e "\033[33mComposing the VPN services.\033[0m"
+  chmod 777 compose_vpn.sh
   ./compose_vpn.sh
   echo -e "\033[32m[OK] all VPN services is up.\033[0m"
 }

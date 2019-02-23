@@ -3,15 +3,29 @@
 check_docker_installed()
 {
   if [ -x "$(command -v docker)" ]; then
-      echo -e "\033[35m`docker --version`\033[0m"
-      echo -e "\033[32m[OK] docker has been installed.\033[0m"
+    echo -e "\033[35m`docker --version`\033[0m"
+    echo -e "\033[32m[OK] docker has been installed.\033[0m"
   else
-      echo -e "\033[33mInstalling docker.\033[0m"
-      yum -y install docker
-      echo -e "\033[35m`docker --version`\033[0m"
-      systemctl start docker
-      systemctl enable docker
-      echo -e "\033[32m[OK] docker has been installed.\033[0m"
+    echo -e "\033[33mInstalling docker.\033[0m"
+    yum -y install docker
+    echo -e "\033[35m`docker --version`\033[0m"
+    systemctl start docker
+    systemctl enable docker
+    echo -e "\033[32m[OK] docker has been installed.\033[0m"
+  fi
+}
+
+check_compose_installed()
+{
+  if [ -x "$(command -v docker-compose)" ]; then
+    echo -e "\033[35m`docker-compose --version`\033[0m"
+    echo -e "\033[32m[OK] docker-compose has been installed.\033[0m"
+  else
+    echo -e "\033[33mInstalling docker-compose.\033[0m"
+    curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
+    chmod +x /usr/bin/docker-compose
+    echo -e "\033[35m`docker-compose --version`\033[0m"
+    echo -e "\033[32m[OK] docker-compose has been installed.\033[0m"
   fi
 }
 
@@ -271,6 +285,8 @@ error_status="off"
 ocserv_init="off"
 
 check_docker_installed
+
+check_compose_installed
 
 check_docker_actived
 

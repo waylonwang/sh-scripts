@@ -1,7 +1,7 @@
 #!/bin/bash
 # Copyright (c) 2019 Waylon Wang <waylon@waylon.wang>
 # Licensed under the MIT License
-#
+
 #*************************************************************************************
 # 本脚本实现了一些基础和常用的脚本功能
 #  - 检查操作系统是否符合要求
@@ -121,26 +121,12 @@ function check_docker_active()
   shift $((OPTIND-1))
 
   is_docker_install ; local is_install=$?
-  [ "$is_install" != 0 -a "$prompt" = 0 ] && echo -e "{CLR_FG_BRD}[Fault]${CLR_NO} startup docker error, docker not install."
+  [ "$is_install" != 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} startup docker error, docker not install."
 
   is_docker_active ; local is_active=$?
   [ "$is_active" != 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Docker is inactive.${CLR_NO}"
   [ "$is_active" != 0 -a "$start" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Starting up docker.${CLR_NO}"
   [ "$is_active" != 0 -a "$start" = 0 ] && systemctl start docker
-
-  # local is_active=`is_docker_active` times=0
-  # if [ "$is_active" != 0 ]; then
-	 #  [ "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Docker is inactive.${CLR_NO}"
-	 #  [ "$up" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Starting up docker.${CLR_NO}"
-	 #  while 
-	 #  	is_active=`is_docker_active`
-	 #  	[ "$is_active" != 0 -a "$up" = 0 -a "$times" -lt 3]
-	 #  do
-	 #  	systemctl start docker
-	 #  	times=$((times+1))
-	 #  	sleep 1
-	 #  done
-	 # fi
 
   if is_docker_active ; then
     [ "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} docker is running."
@@ -187,8 +173,12 @@ function check_docker_install()
   is_docker_install ; local is_install=$?
   [ "$is_install" != 0 -a "$install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Installing docker.${CLR_NO}"
   [ "$is_install" != 0 -a "$install" = 0 ] && yum -y install docker
-  [ "$is_install" != 0 -a "$install" = 0 ] && is_docker_install ; is_install=$? 
-  [ "$is_install" != 0 -a "$version" = 0 ] && echo -e "{CLR_FG_BRD}[Fault]${CLR_NO} get version error, docker not install."
+
+  if [ "$is_install" != 0 -a "$install" = 0 ]; then 
+  	is_docker_install ; is_install=$? 
+  fi
+
+  [ "$is_install" != 0 -a "$version" = 0 ] && echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} get version error, docker not install."
   [ "$is_install" = 0 -a "$version" = 0 ] && echo -e "${CLR_FG_PU}`docker --version`${CLR_NO}"
   [ "$is_install" = 0 -a "$start" = 0 -a "$prompt" = 0 ] && check_docker_active -s -p
   [ "$is_install" = 0 -a "$start" = 0 -a "$prompt" != 0 ] && check_docker_active -s
@@ -229,114 +219,15 @@ function check_compose_install()
   [ "$is_install" != 0 -a "$install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Installing docker-compose.${CLR_NO}"
   [ "$is_install" != 0 -a "$install" = 0 ] && curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
   [ "$is_install" != 0 -a "$install" = 0 ] && chmod +x /usr/bin/docker-compose
-  [ "$is_install" != 0 -a "$install" = 0 ] && is_docker_install ; is_install=$? 
-  [ "$is_install" != 0 -a "$version" = 0 ] && echo -e "{CLR_FG_BRD}[Fault]${CLR_NO} get version error, docker-compose not install."
-  [ "$is_install" = 0 -a "$version" = 0 ] && echo -e "${CLR_FG_PU}`compose --version`${CLR_NO}"
+
+  if [ "$is_install" != 0 -a "$install" = 0 ]; then 
+  	is_docker_install ; is_install=$? 
+  fi
+
+  [ "$is_install" != 0 -a "$version" = 0 ] && echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} get version error, docker-compose not install."
+  [ "$is_install" = 0 -a "$version" = 0 ] && echo -e "${CLR_FG_PU}`docker-compose --version`${CLR_NO}"
   [ "$is_install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} docker has been installed."
   [ "$is_install" = 0 ] && ret=0
   
   return $ret
-}
-
-
-function test_check_os()
-{
-	echo 'check_os -t "centos,dsm" -p'
-	check_os -t "centos,dsm" -p 
-	echo ret $?
-	echo
-
-	echo 'check_os -t "centos,dsm"'
-	check_os -t "centos,dsm"
-	echo ret $?
-	echo
-
-	echo 'check_os -t "centos,dsm" -p'
-	check_os -t "ubuntu,dsm" -p 
-	echo ret $?
-	echo
-
-	echo 'check_os -t "centos,dsm"'
-	check_os -t "ubuntu,dsm"
-	echo ret $?
-	echo
-
-	echo 'check_os -t "centos,ubuntu,dsm" -p'
-	check_os -t "centos,ubuntu,dsm" -p 
-	echo ret $?
-	echo
-
-	echo 'check_os -t "centos,ubuntu,dsm"'
-	check_os -t "centos,ubuntu,dsm"	
-	echo ret $?
-	echo
-}
-
-function test_check_docker_install()
-{
-	echo 'check_docker_install'
-	check_docker_install
-	echo ret $?
-	echo
-
-	echo 'check_docker_install -p'
-	check_docker_install -p 
-	echo ret $?
-	echo
-
-	echo 'check_docker_install -p -v'
-	check_docker_install -p -v 
-	echo ret $?
-	echo
-
-	echo 'check_docker_install -p -i -v'
-	check_docker_install -p -i -v 
-	echo ret $?
-	echo
-
-	echo 'check_docker_install -p -i -e -v'
-	check_docker_install -p -i -e -v 
-	echo ret $?
-	echo
-}
-
-function test_check_compose_install()
-{
-	echo 'check_compose_install'
-	check_compose_install
-	echo ret $?
-	echo
-
-	echo 'check_compose_install -p'
-	check_compose_install -p 
-	echo ret $?
-	echo
-
-	echo 'check_compose_install -p -v'
-	check_compose_install -p -v 
-	echo ret $?
-	echo
-
-	echo 'check_compose_install -p -i -v'
-	check_compose_install -p -i -v 
-	echo ret $?
-	echo
-}
-
-function test_check_docker_active()
-{
-	echo 'check_docker_active'
-	check_docker_active
-	echo ret $?
-	echo
-
-	echo 'check_docker_active -p'
-	check_docker_active -p 
-	echo ret $?
-	echo
-
-	echo 'check_docker_active -p -s'
-	check_docker_active -p -s
-	echo ret $?
-	echo
 }

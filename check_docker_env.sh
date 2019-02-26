@@ -65,7 +65,7 @@ function is_docker_active()
 # 检查操作系统
 # 输入:
 #       -t 包含目标系统名称的字符串，以逗号分隔
-#       -p 出现错误时给出提示
+#       -p 显示提示信息
 # 输出: 是否匹配 0-匹配 1-不匹配
 # 示例: check_os -t "centos,ubuntu" -p 
 function check_os()
@@ -97,14 +97,78 @@ function check_os()
   return $ret
 }
 
+# 检查docker是否运行
+# 输入:
+#       -s docker未运行时尝试启动docker
+#       -p 显示提示信息
+# 输出: 是否匹配 0-已运行 1-未运行
+# 示例: check_docker_active -u -p 
+function check_docker_active()
+{
+	local up=1 prompt=1 ret=1
+  local OPTIND OPTARG arg_all
+  while getopts "ps" arg_all; do
+    case $arg_all in
+      p)
+        prompt=0 ;;
+      s)
+				start=0 ;;
+	  	?)
+      	[ "$prompt" = 0 ] && echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} input error, unkonw argument"
+	    	exit 1 ;;
+	  esac
+  done
+  shift $((OPTIND-1))
+
+  is_docker_install ; local is_install=$?
+  [ "$is_install" != 0 -a "$prompt" = 0 ] && echo -e "{CLR_FG_BRD}[Fault]${CLR_NO} startup docker error, docker not install."
+
+  is_docker_active ; local is_active=$?
+  [ "$is_active" != 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Docker is inactive.${CLR_NO}"
+  [ "$is_active" != 0 -a "$start" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Starting up docker.${CLR_NO}"
+  [ "$is_active" != 0 -a "$start" = 0 ] && systemctl start docker
+
+  # local is_active=`is_docker_active` times=0
+  # if [ "$is_active" != 0 ]; then
+	 #  [ "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Docker is inactive.${CLR_NO}"
+	 #  [ "$up" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Starting up docker.${CLR_NO}"
+	 #  while 
+	 #  	is_active=`is_docker_active`
+	 #  	[ "$is_active" != 0 -a "$up" = 0 -a "$times" -lt 3]
+	 #  do
+	 #  	systemctl start docker
+	 #  	times=$((times+1))
+	 #  	sleep 1
+	 #  done
+	 # fi
+
+  if is_docker_active ; then
+    [ "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} docker is running."
+    ret=0
+  else
+    [ "$start" = 0  -a "$prompt" = 0 ] && echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} docker startup failed."
+  fi
+
+  return $ret
+}
+
+# 检查docker是否安装
+# 输入:
+#       -a docker加入自启动服务
+#       -i docker未安装时尝试安装docker
+#       -p 显示提示信息
+#       -s docker未运行时尝试启动docker
+#       -v 显示docker版本信息
+# 输出: 是否匹配 0-已安装 1-未安装
+# 示例: check_docker_install -a -i -p -s -v
 function check_docker_install()
 {
 	local enable=1 install=1 prompt=1 start=1 version=1 ret=1
   local OPTIND OPTARG arg_all
-  while getopts "eipsv" arg_all; do
+  while getopts "aipsv" arg_all; do
     case $arg_all in
-      e)
-				enable=0 ;;
+      a)
+				autorun=0 ;;
       i)
 				install=0 ;;
       p)
@@ -123,15 +187,25 @@ function check_docker_install()
   is_docker_install ; local is_install=$?
   [ "$is_install" != 0 -a "$install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Installing docker.${CLR_NO}"
   [ "$is_install" != 0 -a "$install" = 0 ] && yum -y install docker
-  [ "$version" = 0 ] && echo -e "${CLR_FG_PU}`docker --version`${CLR_NO}"
-  [ "$is_install" != 0 ] && is_docker_install ; is_install=$? ; ret=0
-  [ "$is_install" = 0 -a "$start" = 0 ] && systemctl start docker
-  [ "$is_install" = 0 -a "$enable" = 0 ] && systemctl enable docker
+  [ "$is_install" != 0 -a "$install" = 0 ] && is_docker_install ; is_install=$? 
+  [ "$is_install" != 0 -a "$version" = 0 ] && echo -e "{CLR_FG_BRD}[Fault]${CLR_NO} get version error, docker not install."
+  [ "$is_install" = 0 -a "$version" = 0 ] && echo -e "${CLR_FG_PU}`docker --version`${CLR_NO}"
+  [ "$is_install" = 0 -a "$start" = 0 -a "$prompt" = 0 ] && check_docker_active -s -p
+  [ "$is_install" = 0 -a "$start" = 0 -a "$prompt" != 0 ] && check_docker_active -s
+  [ "$is_install" = 0 -a "$autorun" = 0 ] && systemctl enable docker
   [ "$is_install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} docker has been installed."
+  [ "$is_install" = 0 ] && ret=0
 
   return $ret
 }
 
+# 检查docker-compose是否安装
+# 输入:
+#       -i docker-compose未安装时尝试安装docker-compose
+#       -p 显示提示信息
+#       -v 显示docker-compose版本信息
+# 输出: 是否匹配 0-已安装 1-未安装
+# 示例: check_compose_install -i -p -v
 function check_compose_install()
 {
 	local install=1 prompt=1 version=1 ret=1
@@ -151,61 +225,19 @@ function check_compose_install()
   done
   shift $((OPTIND-1))
 
-  if is_compose_install ; then
-    [ "$version" = 0 ] && echo -e "${CLR_FG_PU}`docker-compose --version`${CLR_NO}"
-    [ "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK] docker-compose has been installed.${CLR_NO}"
-    ret=0
-  else
-    [ "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Installing docker-compose.${CLR_NO}"
-    [ "$install" = 0 ] && curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
-    [ "$install" = 0 ] && chmod +x /usr/bin/docker-compose
-    [ "$version" = 0 ] && echo -e "${CLR_FG_PU}`docker-compose --version`${CLR_NO}"
-    [ "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} docker-compose has been installed."
-  fi
-
+  is_compose_install ; local is_install=$?
+  [ "$is_install" != 0 -a "$install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Installing docker-compose.${CLR_NO}"
+  [ "$is_install" != 0 -a "$install" = 0 ] && curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
+  [ "$is_install" != 0 -a "$install" = 0 ] && chmod +x /usr/bin/docker-compose
+  [ "$is_install" != 0 -a "$install" = 0 ] && is_docker_install ; is_install=$? 
+  [ "$is_install" != 0 -a "$version" = 0 ] && echo -e "{CLR_FG_BRD}[Fault]${CLR_NO} get version error, docker-compose not install."
+  [ "$is_install" = 0 -a "$version" = 0 ] && echo -e "${CLR_FG_PU}`compose --version`${CLR_NO}"
+  [ "$is_install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} docker has been installed."
+  [ "$is_install" = 0 ] && ret=0
+  
   return $ret
 }
 
-function check_docker_active()
-{
-	local up=1 prompt=1 ret=1
-  local OPTIND OPTARG arg_all
-  while getopts "up" arg_all; do
-    case $arg_all in
-      u)
-				up=0 ;;
-      p)
-        prompt=0 ;;
-	  	?)
-      	[ "$prompt" = 0 ] && echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} input error, unkonw argument"
-	    	exit 1 ;;
-	  esac
-  done
-  shift $((OPTIND-1))
-
-  local is_active=`is_docker_active` times=0
-  if [ "$is_active" != 0 ]; then
-	  [ "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Docker is inactive.${CLR_NO}"
-	  [ "$up" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Starting up docker.${CLR_NO}"
-	  while 
-	  	is_active=`is_docker_active`
-	  	[ "$is_active" != 0 -a "$up" = 0 -a "$times" -lt 3]
-	  do
-	  	systemctl start docker
-	  	times=$((times+1))
-	  	sleep 1
-	  done
-	 fi
-
-  if is_docker_active ; then
-    [ "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} docker is running."
-    ret=0
-  else
-    [ "$prompt" = 0 ] && echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} docker startup failed."
-  fi
-
-  return $ret
-}
 
 function test_check_os()
 {
@@ -303,8 +335,8 @@ function test_check_docker_active()
 	echo ret $?
 	echo
 
-	echo 'check_docker_active -p -u'
-	check_docker_active -p -u
+	echo 'check_docker_active -p -s'
+	check_docker_active -p -s
 	echo ret $?
 	echo
 }

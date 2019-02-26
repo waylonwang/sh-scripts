@@ -267,5 +267,3 @@ function test_check_docker_active{}
 	echo 'check_docker_active -p -u'
 	check_docker_active -p -u
 }
-
-test_check_os

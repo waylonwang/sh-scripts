@@ -86,13 +86,13 @@ function check_os()
   shift $((OPTIND-1))
 
   for i in ${!targets[@]}; do
-    if [ "${get_os}" = "${targets[i]}" ]; then
+    if [ "$(get_os)" = "${targets[i]}" ]; then
       ret=0
       break
     fi
   done
 
-  [ "$ret" != 0 -a "${prompt}" = 0 ] && echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} This script not supports ${get_os}."
+  [ "$ret" != 0 -a "${prompt}" = 0 ] && echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} This script not supports $(get_os)."
 
   return $ret
 }
@@ -120,18 +120,14 @@ function check_docker_install()
   done
   shift $((OPTIND-1))
 
-  if [ "${is_docker_install}" ]; then
-    [ "$version" = 0 ] && echo -e "${CLR_FG_PU}`docker --version`${CLR_NO}"
-    echo -e "${CLR_FG_GR}[OK] docker has been installed.${CLR_NO}"
-    ret=0
-  else
-    [ "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Installing docker.${CLR_NO}"
-    [ "$install" = 0 ] && yum -y install docker
-    [ "$version" = 0 ] && echo -e "${CLR_FG_PU}`docker --version`${CLR_NO}"
-    [ "$start" = 0 ] && systemctl start docker
-    [ "$enable" = 0 ] && systemctl enable docker
-    [ "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} docker has been installed."
-  fi
+  is_docker_install ; local is_install=$?
+  [ "$is_install" != 0 -a "$install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Installing docker.${CLR_NO}"
+  [ "$is_install" != 0 -a "$install" = 0 ] && yum -y install docker
+  [ "$version" = 0 ] && echo -e "${CLR_FG_PU}`docker --version`${CLR_NO}"
+  [ "$is_install" != 0 ] && is_docker_install ; is_install=$? ; ret=0
+  [ "$is_install" = 0 -a "$start" = 0 ] && systemctl start docker
+  [ "$is_install" = 0 -a "$enable" = 0 ] && systemctl enable docker
+  [ "$is_install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} docker has been installed."
 
   return $ret
 }
@@ -155,7 +151,7 @@ function check_compose_install()
   done
   shift $((OPTIND-1))
 
-  if [ "${is_compose_install}" ]; then
+  if is_compose_install ; then
     [ "$version" = 0 ] && echo -e "${CLR_FG_PU}`docker-compose --version`${CLR_NO}"
     [ "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK] docker-compose has been installed.${CLR_NO}"
     ret=0
@@ -187,18 +183,21 @@ function check_docker_active()
   done
   shift $((OPTIND-1))
 
-  local is_active=`${is_docker_active}` times=0
+  local is_active=`is_docker_active` times=0
   if [ "$is_active" != 0 ]; then
 	  [ "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Docker is inactive.${CLR_NO}"
 	  [ "$up" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Starting up docker.${CLR_NO}"
-	  while [ "${is_docker_active}" -a "$up" = 0 -a "$times" -lt 3]; do
+	  while 
+	  	is_active=`is_docker_active`
+	  	[ "$is_active" != 0 -a "$up" = 0 -a "$times" -lt 3]
+	  do
 	  	systemctl start docker
 	  	times=$((times+1))
 	  	sleep 1
 	  done
 	 fi
 
-  if [ "${is_docker_active}" ]; then
+  if is_docker_active ; then
     [ "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} docker is running."
     ret=0
   else
@@ -212,58 +211,100 @@ function test_check_os()
 {
 	echo 'check_os -t "centos,dsm" -p'
 	check_os -t "centos,dsm" -p 
+	echo ret $?
+	echo
 
 	echo 'check_os -t "centos,dsm"'
 	check_os -t "centos,dsm"
-	 
+	echo ret $?
+	echo
+
+	echo 'check_os -t "centos,dsm" -p'
+	check_os -t "ubuntu,dsm" -p 
+	echo ret $?
+	echo
+
+	echo 'check_os -t "centos,dsm"'
+	check_os -t "ubuntu,dsm"
+	echo ret $?
+	echo
+
 	echo 'check_os -t "centos,ubuntu,dsm" -p'
 	check_os -t "centos,ubuntu,dsm" -p 
+	echo ret $?
+	echo
 
 	echo 'check_os -t "centos,ubuntu,dsm"'
 	check_os -t "centos,ubuntu,dsm"	
+	echo ret $?
+	echo
 }
 
 function test_check_docker_install()
 {
 	echo 'check_docker_install'
 	check_docker_install
+	echo ret $?
+	echo
 
 	echo 'check_docker_install -p'
 	check_docker_install -p 
+	echo ret $?
+	echo
 
 	echo 'check_docker_install -p -v'
 	check_docker_install -p -v 
+	echo ret $?
+	echo
 
 	echo 'check_docker_install -p -i -v'
 	check_docker_install -p -i -v 
+	echo ret $?
+	echo
 
 	echo 'check_docker_install -p -i -e -v'
 	check_docker_install -p -i -e -v 
+	echo ret $?
+	echo
 }
 
 function test_check_compose_install()
 {
 	echo 'check_compose_install'
 	check_compose_install
+	echo ret $?
+	echo
 
 	echo 'check_compose_install -p'
 	check_compose_install -p 
+	echo ret $?
+	echo
 
 	echo 'check_compose_install -p -v'
 	check_compose_install -p -v 
+	echo ret $?
+	echo
 
 	echo 'check_compose_install -p -i -v'
 	check_compose_install -p -i -v 
+	echo ret $?
+	echo
 }
 
 function test_check_docker_active()
 {
 	echo 'check_docker_active'
 	check_docker_active
+	echo ret $?
+	echo
 
 	echo 'check_docker_active -p'
 	check_docker_active -p 
+	echo ret $?
+	echo
 
 	echo 'check_docker_active -p -u'
 	check_docker_active -p -u
+	echo ret $?
+	echo
 }

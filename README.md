@@ -3,6 +3,22 @@
 
 常用Linux shell脚本集合
 
+## public_const.sh
+基础常量，此脚本可在其他脚本中引用
+
+引用方法：
+```shell
+source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/public_const.sh)
+```
+
+## check_docker_env.sh
+检查操作系统是否符合要求，检查docker环境是否已经安装及运行，此脚本可在其他脚本中引用
+
+引用方法：
+```shell
+source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/check_docker_env.sh)
+```
+
 ## vps_deploy_vpn.sh
 VPS一键部署各种VPN类服务的脚本，VPN类服务包含shadowsocks、shadowsocks-r、ocserv、L2TP等，基础服务则包括nginx及portainer，以上服务全部以docker容器方式部署，docker镜像分别取自：
 * teddysun/shadowsocks-libev:alpine

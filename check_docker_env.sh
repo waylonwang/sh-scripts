@@ -208,7 +208,7 @@ function check_docker_active()
   return $ret
 }
 
-function test_check_os{}
+function test_check_os()
 {
 	echo 'check_os -t "centos,dsm" -p'
 	check_os -t "centos,dsm" -p 
@@ -223,7 +223,7 @@ function test_check_os{}
 	check_os -t "centos,ubuntu,dsm"	
 }
 
-function test_check_docker_install{}
+function test_check_docker_install()
 {
 	echo 'check_docker_install'
 	check_docker_install
@@ -241,7 +241,7 @@ function test_check_docker_install{}
 	check_docker_install -p -i -e -v 
 }
 
-function test_check_compose_install{}
+function test_check_compose_install()
 {
 	echo 'check_compose_install'
 	check_compose_install
@@ -256,7 +256,7 @@ function test_check_compose_install{}
 	check_compose_install -p -i -v 
 }
 
-function test_check_docker_active{}
+function test_check_docker_active()
 {
 	echo 'check_docker_active'
 	check_docker_active

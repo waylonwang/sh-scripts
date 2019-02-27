@@ -7,12 +7,12 @@
 #  - 检查portainer挂载卷是否符已存在
 #  - 检查nginx挂载卷是否符已存在
 # 本脚本可在其他脚本中引用:
-#  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/check_base_volumes.sh)
+#  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_base_volumes.sh)
 # 
 # 作者:waylon@waylon.wang
 #*************************************************************************************
 
-source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/public_const.sh)
+source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/public_const.sh)
 
 # 检查portainer挂载卷
 # 输入:

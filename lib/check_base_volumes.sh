@@ -23,7 +23,7 @@ source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/
 # 示例: check_portainer_volumes -c -d "./portaine" -p 
 function check_portainer_volumes()
 {
-  local create=1 dir="./portaine" prompt=1 ret=1
+  local create=1 dir="./portainer" prompt=1 ret=1
   local OPTIND OPTARG arg_all
   while getopts "cd:p" arg_all; do
     case $arg_all in

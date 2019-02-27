@@ -1,7 +1,14 @@
 #! /bin/bash
 
-source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/check_docker_env.sh)
+source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/public_const.sh)
 
+# 检查portainer挂载卷
+# 输入:
+#       -c 不存在时自动创建
+#       -d 指定配置文件所在目录
+#       -p 显示提示信息
+# 输出: 是否存在 0-已存在 1-未存在
+# 示例: check_portainer_volumes -c -d "./portaine" -p 
 function check_portainer_volumes()
 {
   local create=1 dir="./portaine" prompt=1 ret=1
@@ -35,6 +42,13 @@ function check_portainer_volumes()
   return $ret
 }
 
+# 检查nginx挂载卷
+# 输入:
+#       -c 不存在时自动创建
+#       -d 指定配置文件所在目录
+#       -p 显示提示信息
+# 输出: 是否存在 0-已存在 1-未存在
+# 示例: check_portainernginx_volumes -c -d "./nginx" -p 
 function check_nginx_volumes()
 {
   local create=1 dir="./nginx" prompt=1 ret=1

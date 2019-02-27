@@ -12,7 +12,7 @@
 # 作者:waylon@waylon.wang
 #*************************************************************************************
 
-source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_docker_env.sh)
+[ -z $REF_CONFLICT_FLAG ] && source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_docker_env.sh)
 
 # 检查mysql挂载卷
 # 输入:

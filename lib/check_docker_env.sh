@@ -8,13 +8,13 @@
 #  - 检查docker是否已经安装及运行
 #  - 检查docker-compose是否已经安装
 # 本脚本可在其他脚本中引用:
-#  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/lib/master/check_docker_env.sh)
+#  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_docker_env.sh)
 # 
 # 作者:waylon@waylon.wang
 #*************************************************************************************
 
 # 字体颜色
-source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/public_const.sh)
+source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/public_const.sh)
 
 # 获取当前操作系统名称
 # 输入: 无

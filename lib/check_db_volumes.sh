@@ -7,12 +7,12 @@
 #  - 检查mysql挂载卷是否符已存在
 #  - 检查phpmyadmin挂载卷是否符已存在
 # 本脚本可在其他脚本中引用:
-#  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/check_db_volumes.sh)
+#  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_db_volumes.sh)
 # 
 # 作者:waylon@waylon.wang
 #*************************************************************************************
 
-source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/check_docker_env.sh)
+source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_docker_env.sh)
 
 # 检查mysql挂载卷
 # 输入:

@@ -133,9 +133,9 @@ function add_nginx_conf()
     [ "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Adding nginx configuration for ${name}.${CLR_NO}"
 
     local domain ip port
-    read -p $"Input the ${CLR_FG_CY}domain name${CLR_NO} of the server: " domain
-    read -p $"Input the ${CLR_FG_CY}local IP${CLR_NO} of the server: " ip
-    read -p $"Input the ${CLR_FG_CY}local port${CLR_NO} of the ${name} service: " port
+    read -p $"Input the domain name of the server: " domain
+    read -p $"Input the local IP of the server: " ip
+    read -p $"Input the local port of the ${name} service: " port
 
     local file_conf=$dir"/conf/"$domain".conf"
 

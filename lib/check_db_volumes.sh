@@ -44,7 +44,7 @@ function check_mysql_volumes()
     [ "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Creating mysql configuration files.${CLR_NO}"
 
     local password
-    read -p $'Input the ${CLR_FG_CY}password${CLR_NO} of the root: ' password
+    read -p $"Input the ${CLR_FG_CY}password${CLR_NO} of the root: " password
 
     local file_env=$dir"/conf/mysql.env"
     local file_conf=$dir"/conf/my.cnf"
@@ -125,7 +125,7 @@ function check_phpmyadmin_volumes()
     [ "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Creating phpmyadmin configuration files.${CLR_NO}"
 
     local password
-    read -p $'Input the ${CLR_FG_CY}password${CLR_NO} of the root: ' password
+    read -p $"Input the ${CLR_FG_CY}password${CLR_NO} of the root: " password
 
     local file_env=$dir"/conf/phpmyadmin.env"
 

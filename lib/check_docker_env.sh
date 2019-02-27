@@ -30,11 +30,7 @@ function get_os()
 # 输出: 0-已安装 1-未安装
 function is_docker_install()
 {
-  if [ -x "$(command -v docker)" ]; then
-    return 0
-  else
-    return 1
-  fi	
+  [ -x "$(command -v docker)" ] && return 0 || return 1
 }
 
 # 判断是否已经安装docker-compose
@@ -42,11 +38,7 @@ function is_docker_install()
 # 输出: 0-已安装 1-未安装
 function is_compose_install()
 {
-  if [ -x "$(command -v docker-compose)" ]; then
-    return 0
-  else
-    return 1
-  fi
+  [ -x "$(command -v docker-compose)" ] && return 0 || return 1
 }
 
 # 判断是否已经在运行docker
@@ -55,11 +47,7 @@ function is_compose_install()
 function is_docker_active()
 {
   local status=`systemctl is-active docker`
-  if [ "$status" -a "$status" = "active" ]; then
-      return 0
-    else
-      return 1
-  fi
+  [ "$status" -a "$status" = "active" ] && return 0 || return 1
 }
 
 # 检查操作系统

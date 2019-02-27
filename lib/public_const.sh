@@ -11,6 +11,9 @@
 # 作者:waylon@waylon.wang
 #*************************************************************************************
 
+# 校验标识，用于校验本脚本是否已引用，如已加载则无需再引用，否则会因只读变量重复赋值而报错
+readonly REF_CONFLICT_FLAG="ON"
+
 # 字体颜色
 # 示例: ${readonly CLR_FG_RD}This is a example${readonly CLR_NO}
 #

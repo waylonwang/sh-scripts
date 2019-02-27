@@ -137,7 +137,7 @@ function add_nginx_conf()
     read -p $"Input the local IP of the server: " ip
     read -p $"Input the local port of the ${name} service: " port
 
-    local file_conf=$dir"/conf/"$domain".conf"
+    local file_conf=$dir"/conf/"$name".conf"
 
     conf="
       # "${name}"\n

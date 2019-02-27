@@ -1,4 +1,16 @@
-#! /bin/bash
+#!/bin/bash
+# Copyright (c) 2019 Waylon Wang <waylon@waylon.wang>
+# Licensed under the MIT License
+
+#*************************************************************************************
+# 本脚本实现了基础相关的脚本功能
+#  - 检查portainer挂载卷是否符已存在
+#  - 检查nginx挂载卷是否符已存在
+# 本脚本可在其他脚本中引用:
+#  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/check_base_volumes.sh)
+# 
+# 作者:waylon@waylon.wang
+#*************************************************************************************
 
 source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/public_const.sh)
 

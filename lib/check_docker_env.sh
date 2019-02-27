@@ -14,7 +14,7 @@
 #*************************************************************************************
 
 # 字体颜色
-source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/public_const.sh)
+[ -z $REF_CONFLICT_FLAG ] && source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/public_const.sh)
 
 # 获取当前操作系统名称
 # 输入: 无

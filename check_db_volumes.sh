@@ -1,7 +1,26 @@
-#! /bin/bash
+#!/bin/bash
+# Copyright (c) 2019 Waylon Wang <waylon@waylon.wang>
+# Licensed under the MIT License
+
+#*************************************************************************************
+# 本脚本实现了数据库相关的脚本功能
+#  - 检查mysql挂载卷是否符已存在
+#  - 检查phpmyadmin挂载卷是否符已存在
+# 本脚本可在其他脚本中引用:
+#  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/check_db_volumes.sh)
+# 
+# 作者:waylon@waylon.wang
+#*************************************************************************************
 
 source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/check_docker_env.sh)
 
+# 检查mysql挂载卷
+# 输入:
+#       -c 不存在时自动创建
+#       -d 指定配置文件所在目录
+#       -p 显示提示信息
+# 输出: 是否存在 0-已存在 1-未存在
+# 示例: check_mysql_volumes -c -d "./mysql" -p 
 function check_mysql_volumes()
 {
   local create=1 dir="./mysql/mariadb10" prompt=1 ret=1
@@ -76,6 +95,13 @@ function check_mysql_volumes()
   fi
 }
 
+# 检查phpmyadmin挂载卷
+# 输入:
+#       -c 不存在时自动创建
+#       -d 指定配置文件所在目录
+#       -p 显示提示信息
+# 输出: 是否存在 0-已存在 1-未存在
+# 示例: check_phpmyadmin_volumes -c -d "./phpmyadmin" -p 
 function check_phpmyadmin_volumes()
 {
   local create=1 dir="./phpmyadmin" prompt=1 ret=1

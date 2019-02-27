@@ -12,7 +12,7 @@
 # 作者:waylon@waylon.wang
 #*************************************************************************************
 
-source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/public_const.sh)
+[ -z $REF_CONFLICT_FLAG ] && source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/public_const.sh)
 
 # 检查portainer挂载卷
 # 输入:

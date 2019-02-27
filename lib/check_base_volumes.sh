@@ -85,14 +85,62 @@ function check_nginx_volumes()
   if [ ! -d $dir"/conf" -a "$create" = 0 ]; then
     [ "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Creating nginx configuration files.${CLR_NO}"
 
+    mkdir -p $dir"/conf"
+    mkdir -p $dir"/log"
+
+    ret=0
+    [ "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} nginx configuration folder is ready."
+  fi
+
+  return $ret
+}
+
+# 添加nginx配置
+# 输入:
+#       -a 追加模式
+#       -d 指定配置文件所在目录
+#       -n 服务名称
+#       -p 显示提示信息
+# 输出: 是否存在 0-已添加 1-未添加
+# 示例: add_nginx_conf -a -d "./nginx" -n "portainer" -p 
+function add_nginx_conf()
+{
+  local append=1 dir="./nginx" prompt=1 ret=1
+  local OPTIND OPTARG arg_all
+  while getopts "ad:n:p" arg_all; do
+    case $arg_all in
+      a)
+        append=0 ;;
+      d)
+        dir=(${OPTARG//,/ }) ;;
+      n)
+        name=(${OPTARG//,/ }) ;;
+      p)
+        prompt=0 ;;
+      ?)
+        [ "$prompt" = 0 ] && echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} input error, unkonw argument"
+        exit 1 ;;
+    esac
+  done
+  shift $((OPTIND-1))
+
+  [ ! -d $dir"/conf" ] && ret=1 ; echo 
+
+  if [ ! -d $dir"/conf" ]; then
+    [ "$prompt" = 0 ] && echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} add nginx config error, nginx configuration folder not exist"
+    ret=1
+  else
+    [ "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Adding nginx configuration for ${name}.${CLR_NO}"
+
     local domain ip port
     read -p $'Input the ${CLR_FG_CY}domain name${CLR_NO} of the server: ' domain
     read -p $'Input the ${CLR_FG_CY}local IP${CLR_NO} of the server: ' ip
-    read -p $'Input the ${CLR_FG_CY}local port${CLR_NO} of the portainer service: ' port
+    read -p $'Input the ${CLR_FG_CY}local port${CLR_NO} of the ${name} service: ' port
 
     local file_conf=$dir"/conf/"$domain".conf"
 
     conf="
+      # "${name}"\n
       server {\n
       \tlisten\t\t80;\n
       \tserver_name\t"${domain}";\n
@@ -111,12 +159,11 @@ function check_nginx_volumes()
       \t}\n
       }"
 
-    mkdir -p $dir"/conf"
-    mkdir -p $dir"/log"
-    echo -e $conf > $file_conf
+    [ "$append" != 0 ] && echo -e $conf > $file_conf
+    [ "$append" = 0 ] && echo -e $conf >> $file_conf
 
     ret=0
-    [ "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} nginx configuration folder is ready."
+    [ "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} nginx configuration for ${name} is ready."
   fi
 
   return $ret

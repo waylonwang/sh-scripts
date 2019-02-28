@@ -57,7 +57,7 @@ function check_mysql_volumes()
       character-set-server = utf8mb4\n
       \n
       # 数据库字符集对应一些排序等规则，注意要和character-set-server对应\n
-      collaticonfon-server = utf8mb4_general_ci\n
+      collation-server = utf8mb4_general_ci\n
       \n
       # 修正 OperationalError: (2006, 'MySQL server has gone away') 错误\n
       wait_timeout=100000\n

@@ -65,8 +65,8 @@ function check_mysql_volumes()
       # 日志文件名\n
       log-bin = /var/log/mysql/mysql-bin\n
       \n
-      # 主数据库端ID号\n
-      server-id = 10\n
+      # 从数据库端ID号\n
+      server-id = 20\n
       \n
       # 日志保留时间\n
       expire_logs_days = 10\n

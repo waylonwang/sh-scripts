@@ -2,8 +2,6 @@
 
 [ -z $REF_CONFLICT_FLAG ] && source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/public_const.sh)
 
-export DB_HOST="db.cloudvalley.pw"
-
 function init_config_folder()
 {
   [ ! -d "docker" ] && mkdir docker

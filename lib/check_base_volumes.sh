@@ -60,7 +60,7 @@ function check_portainer_volumes()
 #       -d 指定配置文件所在目录
 #       -p 显示提示信息
 # 输出: 是否存在 0-已存在 1-未存在
-# 示例: check_php_volumes -c -d "./portaine" -p 
+# 示例: check_php_volumes -c -d "./php" -p 
 function check_php_volumes()
 {
   local create=1 dir="./php" prompt=1 ret=1

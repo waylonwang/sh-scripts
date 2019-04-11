@@ -18,7 +18,7 @@
 
 # 获取当前操作系统名称
 # 输入: 无
-# 输出: 操作系统名称 debian|ubuntu|devuan|centos|fedora|rhel
+# 输出: 操作系统名称 debian|ubuntu|devuan|centos|fedora|rhel|raspbian
 function get_os()
 {
   source /etc/os-release

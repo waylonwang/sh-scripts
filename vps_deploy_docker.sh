@@ -18,8 +18,13 @@ function init_config_folder()
 function download_compose_file()
 {
   echo -e "${CLR_FG_YL}Downloading the latest compose files and scripts.${CLR_NO}"
-  curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/base.yml
-  curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/compose_base.sh
+  if [ "$(get_os)" = "raspbian" ]; then
+    curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/base_raspbian.yml
+    curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/compose_base.sh
+  else
+    curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/base.yml
+    curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/compose_base.sh
+  fi
   echo -e "${CLR_FG_GR}[OK]${CLR_NO} compose files and scripts has downloaded."
 }
 

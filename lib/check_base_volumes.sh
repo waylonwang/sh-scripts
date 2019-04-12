@@ -94,6 +94,46 @@ function check_php_volumes()
   return $ret
 }
 
+# 检查www挂载卷
+# 输入:
+#       -c 不存在时自动创建
+#       -d 指定配置文件所在目录
+#       -p 显示提示信息
+# 输出: 是否存在 0-已存在 1-未存在
+# 示例: check_www_volumes -c -d "./www" -p 
+function check_www_volumes()
+{
+  local create=1 dir="./www" prompt=1 ret=1
+  local OPTIND OPTARG arg_all
+  while getopts "cd:p" arg_all; do
+    case $arg_all in
+      c)
+        create=0 ;;
+      d)
+        dir=(${OPTARG//,/ }) ;;
+      p)
+        prompt=0 ;;
+      ?)
+        [ "$prompt" = 0 ] && echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} input error, unkonw argument"
+        exit 1 ;;
+    esac
+  done
+  shift $((OPTIND-1))
+
+  [ -d $dir ] && ret=0
+
+  if [ ! -d $dir -a "$create" = 0 ]; then
+    [ "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Creating www configuration files.${CLR_NO}"
+
+    mkdir -p $dir
+
+    ret=0
+    [ "$prompt" = 0 ] && echo -e "${CLR_FG_GR}[OK]${CLR_NO} www configuration folder is ready."
+  fi
+
+  return $ret
+}
+
 # 检查nginx挂载卷
 # 输入:
 #       -c 不存在时自动创建

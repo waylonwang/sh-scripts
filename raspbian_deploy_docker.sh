@@ -10,24 +10,30 @@ function init_config_folder()
 
   source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_base_volumes.sh)
   check_portainer_volumes -c -p
+  check_www_volumes -c -p
   check_nginx_volumes -c -p
+  check_php_volumes -c -p
 
-  [ ! -e "./nginx/conf/portainer.conf" ] && add_nginx_conf -d "./nginx" -n "portainer" -p
+  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_db_volumes.sh)
+  check_mysql_volumes -c -p
+  check_phpmyadmin_volumes -c -p
+
+  # [ ! -e "./nginx/conf/portainer.conf" ] && add_nginx_conf -d "./nginx" -n "portainer" -p
 }
 
 function download_compose_file()
 {
   echo -e "${CLR_FG_YL}Downloading the latest compose files and scripts.${CLR_NO}"
-  curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/base.yml
-  curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/compose_base.sh
+  curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/base_raspbian.yml
+  curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/compose_base_raspbian.sh
   echo -e "${CLR_FG_GR}[OK]${CLR_NO} compose files and scripts has downloaded."
 }
 
 function compose_all_file()
 {
   echo -e "${CLR_FG_YL}Composing the base services.${CLR_NO}"
-  chmod +x compose_base.sh
-  ./compose_base.sh
+  chmod +x compose_base_raspbian.sh
+  ./compose_base_raspbian.sh
   echo -e "${CLR_FG_GR}[OK]${CLR_NO} all base services is up."
 }
 
@@ -36,7 +42,7 @@ function main(){
   source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_docker_env.sh)
   echo -e "${CLR_FG_PU}Start deploying docker Service${CLR_NO}"
 
-  check_os -t "centos" -p
+  check_os -t "raspbian" -p
   if [ $? -eq 0 ]; then
     check_docker_install -a -i -p -s -v
     check_compose_install -i -p -v

@@ -132,7 +132,7 @@ function check_phpmyadmin_volumes()
     env="
       PMA_ARBITRARY=1
       PMA_HOST=mysql
-      PMA_VERBOSE=db
+      PMA_VERBOSE=mysql
       PMA_PORT=3306
       PMA_USER=root
       PMA_PASSWORD=${password}

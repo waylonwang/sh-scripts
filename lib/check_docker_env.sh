@@ -160,7 +160,11 @@ function check_docker_install()
 
   is_docker_install ; local is_install=$?
   [ "$is_install" != 0 -a "$install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Installing docker.${CLR_NO}"
-  [ "$is_install" != 0 -a "$install" = 0 ] && yum -y install docker
+  if [ "$(get_os)" == "centos" ]; then
+  	[ "$is_install" != 0 -a "$install" = 0 ] && yum -y install docker
+  else
+  	[ "$is_install" != 0 -a "$install" = 0 ] && apt-get install -y docker-ce
+  fi
 
   if [ "$is_install" != 0 -a "$install" = 0 ]; then 
   	is_docker_install ; is_install=$? 

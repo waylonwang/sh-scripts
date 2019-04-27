@@ -163,7 +163,7 @@ function check_docker_install()
   if [ "$(get_os)" == "centos" ]; then
   	[ "$is_install" != 0 -a "$install" = 0 ] && yum -y install docker
   else
-  	[ "$is_install" != 0 -a "$install" = 0 ] && apt-get install -y docker-ce
+  	[ "$is_install" != 0 -a "$install" = 0 ] && apt-get install -y docker
   fi
 
   if [ "$is_install" != 0 -a "$install" = 0 ]; then 

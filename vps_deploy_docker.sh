@@ -23,7 +23,17 @@ function init_config_folder()
   check_portainer_volumes -c -p
   check_nginx_volumes -c -p
 
-  [ ! -e "./nginx/conf/portainer.conf" ] && add_nginx_conf -d "./nginx" -n "portainer" -p
+  local answer
+  read -p $"Add nginx configuration file of portainer?[Y/n]: " answer
+  
+  case ${answer:0:1} in
+    n|N )
+        echo -e "${CLR_FG_GR}[OK]${CLR_NO} skip add configuration file."
+    ;;
+    * )
+        [ ! -e "./nginx/conf/portainer.conf" ] && add_nginx_conf -d "./nginx" -n "portainer" -p
+    ;;
+  esac  
 }
 
 function download_compose_file()

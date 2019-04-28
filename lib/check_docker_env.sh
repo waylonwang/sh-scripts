@@ -212,7 +212,7 @@ function check_compose_install()
   if [ "$(get_os)" == "centos" ]; then
   	[ "$is_install" != 0 -a "$install" = 0 ] && curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
   elif [ "$(get_os)" == "ubuntu" ]; then
-  	[ "$is_install" != 0 -a "$install" = 0 ] && wget -no-check-certificate -O /usr/bin/docker-compose "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)"
+  	[ "$is_install" != 0 -a "$install" = 0 ] && wget --no-check-certificate -O /usr/bin/docker-compose "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)"
   fi
   [ "$is_install" != 0 -a "$install" = 0 ] && chmod +x /usr/bin/docker-compose
 

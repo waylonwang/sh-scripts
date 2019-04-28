@@ -24,7 +24,7 @@ function init_config_folder()
   check_mysql_volumes -c -p
   check_phpmyadmin_volumes -c -p
   
-  local answer1,answer2
+  local answer1 answer2
   read -p $"Add nginx configuration file of portainer?[Y/n]: " answer1
   
   case ${answer1:0:1} in
@@ -35,9 +35,9 @@ function init_config_folder()
         [ ! -e "./nginx/conf/portainer.conf" ] && add_nginx_conf -d "./nginx" -n "portainer" -p
     ;;
   esac
-  read -p $"Add nginx configuration file of mysql?[Y/n]: " answer1
+  read -p $"Add nginx configuration file of mysql?[Y/n]: " answer2
   
-  case ${answer1:0:1} in
+  case ${answer2:0:1} in
     n|N )
         echo -e "${CLR_FG_GR}[OK]${CLR_NO} skip add configuration file."
     ;;

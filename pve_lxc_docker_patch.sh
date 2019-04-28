@@ -18,10 +18,14 @@ check_os -t "debian" -p
 
 read -p $"Input PVE Host's ID (such as 103 or 104): " host
 
-pct shutdown $host
+if [[ `pct status $host | sed -n -r '1,1 s/.*status:\s*(\S*)/\1/p'` != "stopped" ]] ; then
+  echo -e "${CLR_FG_YL}Shutdown the HOST [$host]${CLR_NO}"
+  pct shutdown $host
+fi
 
 file="/var/lib/lxc/$host/config"
 
+echo -e "${CLR_FG_YL}Patch file: $file${CLR_NO}"
 chmod ugo+w $file
 
 sed '/^lxc\.apparmor/'d $file
@@ -31,10 +35,20 @@ sed -i '20a\lxc.apparmor.profile = unconfined' $file
 
 file="/etc/pve/lxc/$host.conf"
 
+echo -e "${CLR_FG_YL}Patch file: $file${CLR_NO}"
 chmod ugo+w $file
 
 sed '/^unprivileged/'d $file
 sed -i '20a\lxc.hook.post-stop =' $file
 sed -i '20a\lxc.hook.mount =' $file
 
-pct start $host
+read -p $"Do you need start the Host [$host] (Y/n)" answer
+
+case ${answer:0:1} in
+    n|N ) ;;
+    * )
+      echo -e "${CLR_FG_YL}Start the HOST [$host]${CLR_NO}"
+      pct start $host
+    ;;
+esac
+echo -e "${CLR_FG_GR}$Patch done ${CLR_NO}"

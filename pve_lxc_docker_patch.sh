@@ -28,10 +28,10 @@ sed -i '20a\lxc.cap.drop =' $file
 sed -i '20a\lxc.cgroup.devices.allow = a' $file
 sed -i '20a\lxc.apparmor.profile = unconfined' $file
 
-file="/etc/pve/lxc/$host.conf"
+conf="/etc/pve/lxc/$host.conf"
 
-sed '/^unprivileged/'d $file
-sed -i '20a\lxc.hook.post-stop =' $file
-sed -i '20a\lxc.hook.mount =' $file
+sed '/^unprivileged/'d $conf
+sed -i '20a\lxc.hook.post-stop =' $conf
+sed -i '20a\lxc.hook.mount =' $conf
 
 pct start $host

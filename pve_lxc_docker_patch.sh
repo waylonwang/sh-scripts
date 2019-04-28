@@ -36,7 +36,9 @@ sed -i '20a\lxc.apparmor.profile = unconfined' $file
 file="/etc/pve/lxc/$host.conf"
 
 echo -e "${CLR_FG_YL}Patch file: $file${CLR_NO}"
+chown root:root $file
 chmod ugo+w $file
+chown root:www-data $file
 
 sed '/^unprivileged/'d $file
 sed -i '20a\lxc.hook.post-stop =' $file

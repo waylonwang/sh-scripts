@@ -23,13 +23,14 @@ pct shutdown $host
 
 file="/var/lib/lxc/$host/config"
 
-sed '/^lxc\.apparmor\.profile/'d $file
+sed '/^lxc\.apparmor/'d $file
 sed -i '20a\lxc.cap.drop =' $file
 sed -i '20a\lxc.cgroup.devices.allow = a' $file
 sed -i '20a\lxc.apparmor.profile = unconfined' $file
 
 file="/etc/pve/lxc/$host.conf"
 
+sed '/^unprivileged/'d $file
 sed -i '20a\lxc.hook.post-stop =' $file
 sed -i '20a\lxc.hook.mount =' $file
 

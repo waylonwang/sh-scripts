@@ -8,7 +8,29 @@
 #  - LXC容器中写入解除apparmor限制的配置项
 #  - 将非特权模式改为特权模式
 # 本脚本使用方法:
-#  wget --no-check-certificate https://raw.githubusercontent.com/waylonwang/sh-scripts/master/ubuntu_replace_aliyun_apt_repository.sh && chmod +x ubuntu_replace_aliyun_apt_repository.sh && ./ubuntu_replace_aliyun_apt_repository.sh
+#  wget --no-check-certificate https://raw.githubusercontent.com/waylonwang/sh-scripts/master/pve_lxc_docker_patch.sh && chmod +x pve_lxc_docker_patch.sh && ./pve_lxc_docker_patch.sh
 #
 # 作者:waylon@waylon.wang
 #*************************************************************************************
+source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_os_env.sh)
+
+check_os -t "debian" -p
+
+local host
+read -p $"Input PVE Host's ID (such as 103 or 104): " host
+
+pct shutdown $host
+
+file="/var/lib/lxc/$host/config"
+
+sed '/^lxc\.apparmor\.profile/'d $file
+sed -i '20a\lxc.cap.drop =' $file
+sed -i '20a\lxc.cgroup.devices.allow = a' $file
+sed -i '20a\lxc.apparmor.profile = unconfined' $file
+
+file="/etc/pve/lxc/$host.conf"
+
+sed -i '20a\lxc.hook.post-stop =' $file
+sed -i '20a\lxc.hook.mount =' $file
+
+pct start $host

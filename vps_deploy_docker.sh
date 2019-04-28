@@ -1,5 +1,16 @@
 # !/bin/bash
+# Copyright (c) 2019 Waylon Wang <waylon@waylon.wang>
+# Licensed under the MIT License
 
+#*************************************************************************************
+# 本脚本实现了在VPS中部署docker环境的脚本功能
+# 本脚本使用方法:
+#  curl -o vps_deploy_docker.sh https://raw.githubusercontent.com/waylonwang/sh-scripts/master/vps_deploy_docker.sh && chmod +x vps_deploy_docker.sh && ./vps_deploy_docker.sh
+#  或
+#  wget --no-check-certificate https://raw.githubusercontent.com/waylonwang/sh-scripts/master/vps_deploy_docker.sh && chmod +x vps_deploy_docker.sh && ./vps_deploy_docker.sh
+# 
+# 作者:waylon@waylon.wang
+#*************************************************************************************
 [ -z $REF_CONFLICT_FLAG ] && source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/public_const.sh)
 
 function init_config_folder()

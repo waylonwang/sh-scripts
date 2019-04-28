@@ -16,7 +16,6 @@ source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/
 
 check_os -t "debian" -p
 
-local host
 read -p $"Input PVE Host's ID (such as 103 or 104): " host
 
 pct shutdown $host

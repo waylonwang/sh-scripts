@@ -5,7 +5,7 @@
 #*************************************************************************************
 # 本脚本实现了在VPS中部署docker环境的脚本功能
 # 本脚本使用方法:
-#  curl -o vps_deploy_docker.sh https://raw.githubusercontent.com/waylonwang/sh-scripts/master/vps_deploy_docker.sh && chmod +x vps_deploy_docker.sh && ./vps_deploy_docker.sh
+#  curl -L https://raw.githubusercontent.com/waylonwang/sh-scripts/master/vps_deploy_docker.sh -o vps_deploy_docker.sh && chmod +x vps_deploy_docker.sh && ./vps_deploy_docker.sh
 #  或
 #  wget --no-check-certificate https://raw.githubusercontent.com/waylonwang/sh-scripts/master/vps_deploy_docker.sh && chmod +x vps_deploy_docker.sh && ./vps_deploy_docker.sh
 # 

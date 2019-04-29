@@ -13,9 +13,9 @@ source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/
 #检查OS环境
 check_os -t "debian,ubuntu" -p
 
-codename=`sudo lsb_release -c | sed -n -r '1,1 s/.*Codename:\s*(\S*)/\1/p'`
+codename=`lsb_release -c | sed -n -r '1,1 s/.*Codename:\s*(\S*)/\1/p'`
 
-sudo rm -f /etc/apt/sources.list
+rm -f /etc/apt/sources.list
 
 echo "deb http://mirrors.aliyun.com/ubuntu/ $codename main restricted universe multiverse" >> /etc/apt/sources.list
 echo "deb-src http://mirrors.aliyun.com/ubuntu/ $codename main restricted universe multiverse" >> /etc/apt/sources.list

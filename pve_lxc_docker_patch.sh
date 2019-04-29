@@ -28,7 +28,7 @@ file="/var/lib/lxc/$host/config"
 echo -e "${CLR_FG_YL}Patch file: $file${CLR_NO}"
 chmod ugo+w $file
 
-sed -n '/^lxc\.apparmor/'d $file
+sed -i '/^lxc\.apparmor/'d $file
 sed -i '20a\lxc.cap.drop =' $file
 sed -i '20a\lxc.cgroup.devices.allow = a' $file
 sed -i '20a\lxc.apparmor.profile = unconfined' $file
@@ -40,7 +40,7 @@ echo -e "${CLR_FG_YL}Patch file: $file${CLR_NO}"
 # chmod ugo+w $file
 # chown root:www-data $file
 
-sudo sed -n '/^unprivileged/'d $file
+sudo sed -i '/^unprivileged/'d $file
 sudo sed -i '20a\lxc.hook.post-stop =' $file
 sudo sed -i '20a\lxc.hook.mount =' $file
 

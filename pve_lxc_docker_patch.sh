@@ -29,9 +29,9 @@ echo -e "${CLR_FG_YL}Patch file: $file${CLR_NO}"
 chmod ugo+w $file
 
 sed -i '/^lxc\.apparmor/'d $file
-sed -i '20a\lxc.cap.drop =' $file
-sed -i '20a\lxc.cgroup.devices.allow = a' $file
-sed -i '20a\lxc.apparmor.profile = unconfined' $file
+sed -i '1a\lxc.cap.drop =' $file
+sed -i '1a\lxc.cgroup.devices.allow = a' $file
+sed -i '1a\lxc.apparmor.profile = unconfined' $file
 
 file="/etc/pve/lxc/$host.conf"
 
@@ -41,8 +41,8 @@ echo -e "${CLR_FG_YL}Patch file: $file${CLR_NO}"
 # chown root:www-data $file
 
 sudo sed -i '/^unprivileged/'d $file
-sudo sed -i '20a\lxc.hook.post-stop =' $file
-sudo sed -i '20a\lxc.hook.mount =' $file
+sudo sed -i '1a\lxc.hook.post-stop =' $file
+sudo sed -i '1a\lxc.hook.mount =' $file
 
 read -p $"Do you need start the Host [$host] (Y/n)" answer
 

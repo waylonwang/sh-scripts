@@ -16,6 +16,7 @@ source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/
 
 check_os -t "debian" -p
 
+echo -e "${CLR_FG_YL}Start patch{CLR_NO}"
 read -p $"Input PVE Host's ID (such as 103 or 104): " host
 
 if [[ `pct status $host | sed -n -r '1,1 s/.*status:\s*(\S*)/\1/p'` != "stopped" ]] ; then
@@ -36,9 +37,6 @@ sed -i '1a\lxc.apparmor.profile = unconfined' $file
 file="/etc/pve/lxc/$host.conf"
 
 echo -e "${CLR_FG_YL}Patch file: $file${CLR_NO}"
-# chown root:root $file
-# chmod ugo+w $file
-# chown root:www-data $file
 
 sudo sed -i '/^unprivileged/'d $file
 sudo sed -i '1a\lxc.hook.post-stop =' $file

@@ -16,7 +16,7 @@ source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/
 
 check_os -t "debian" -p
 
-echo -e "${CLR_FG_YL}Start patch{CLR_NO}"
+echo -e "${CLR_FG_YL}Patch start{CLR_NO}"
 read -p $"Input PVE Host's ID (such as 103 or 104): " host
 
 if [[ `pct status $host | sed -n -r '1,1 s/.*status:\s*(\S*)/\1/p'` != "stopped" ]] ; then
@@ -51,4 +51,4 @@ case ${answer:0:1} in
       pct start $host
     ;;
 esac
-echo -e "${CLR_FG_GR}$Patch done ${CLR_NO}"
+echo -e "${CLR_FG_GR}Patch done ${CLR_NO}"

@@ -36,13 +36,13 @@ sed -i '20a\lxc.apparmor.profile = unconfined' $file
 file="/etc/pve/lxc/$host.conf"
 
 echo -e "${CLR_FG_YL}Patch file: $file${CLR_NO}"
-chown root:root $file
-chmod ugo+w $file
-chown root:www-data $file
+# chown root:root $file
+# chmod ugo+w $file
+# chown root:www-data $file
 
-sed '/^unprivileged/'d $file
-sed -i '20a\lxc.hook.post-stop =' $file
-sed -i '20a\lxc.hook.mount =' $file
+sudo sed '/^unprivileged/'d $file
+sudo sed -i '20a\lxc.hook.post-stop =' $file
+sudo sed -i '20a\lxc.hook.mount =' $file
 
 read -p $"Do you need start the Host [$host] (Y/n)" answer
 

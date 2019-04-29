@@ -13,7 +13,7 @@
 #*************************************************************************************
 
 # 获取OS环境
-source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_docker_env.sh)
+source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_os_env.sh)
 
 # 判断是否已经安装docker
 # 输入: 无

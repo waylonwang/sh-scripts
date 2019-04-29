@@ -34,6 +34,8 @@ sed -i '1a\lxc.cap.drop =' $file
 sed -i '1a\lxc.cgroup.devices.allow = a' $file
 sed -i '1a\lxc.apparmor.profile = unconfined' $file
 
+lxc-update-config -c $file
+
 file="/etc/pve/lxc/$host.conf"
 
 echo -e "${CLR_FG_YL}Patch file: $file${CLR_NO}"

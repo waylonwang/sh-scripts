@@ -57,7 +57,7 @@ function main(){
   source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_docker_env.sh)
   echo -e "${CLR_FG_PU}Start deploying docker Service${CLR_NO}"
 
-  check_os -t "centos,ubuntu" -p
+  check_os -t "centos,ubuntu,debian" -p
   if [ $? -eq 0 ]; then
     check_docker_install -a -i -p -s -v
     check_compose_install -i -p -v

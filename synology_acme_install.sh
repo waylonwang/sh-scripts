@@ -61,9 +61,9 @@ function parse_cert_id()
         chmod +x JSON.sh
     fi
     if [ "${NAME}" != "default" ]; then
-        CERT_ID=`cat ${CERT_FOLDER}/_archive/INFO | ./JSON.sh | grep '\[".*","desc"\].*"${NAME}"' | sed -r 's/\["(.*)",.*/\1/'`
+        CERT_ID=`cat ${CERT_FOLDER}/_archive/INFO | ./JSON.sh | grep '\[".*","desc"\].*"'${NAME}'"' | sed -r 's/\["(.*)",.*/\1/'`
     else
-    	  CERT_ID=`cat ${CERT_FOLDER}/_archive/DEFAULT`
+          CERT_ID=`cat ${CERT_FOLDER}/_archive/DEFAULT`
     fi
     if [ "${CERT_ID}" != "" ]; then
         CERT_ARCHIVE=${CERT_FOLDER}/_archive/${CERT_ID}
@@ -113,24 +113,24 @@ function update_cert()
 
 function cp_reverseproxy()
 {
-		local flag=""
+    local flag=""
     for file in `ls ${CERT_FOLDER}/ReverseProxy`
     do
-    		flag=`cat /usr/syno/etc/certificate/_archive/INFO | ./JSON.sh | grep '\["${CERT_ID}","services",.*,"service"\].*"${file}"'`
+        flag=`cat /usr/syno/etc/certificate/_archive/INFO | ./JSON.sh | grep '\["'${CERT_ID}'","services",.*,"service"\].*"'${file}'"'`
         if [ "${flag}" != "" ]; then
             cp ${CERT_ARCHIVE}/*.pem ${CERT_FOLDER}/ReverseProxy/${file}
         fi
-    done	
+    done    
 }
 
 function main()
 {
     # 获取证书
     if [ "${MODE}" -eq 0 ]; then
-    	  echo -e "${CLR_YL}开始创建${DOMAIN}证书,保存到:${CLR_NO}${CERT_ARCHIVE}"
+          echo -e "${CLR_YL}开始创建${DOMAIN}证书,保存到:${CLR_NO}${CERT_ARCHIVE}"
         create_cert
     else
-    	  echo  -e "${CLR_YL}开始更新${DOMAIN}证书,保存到:${CLR_NO}${CERT_ARCHIVE}"
+          echo  -e "${CLR_YL}开始更新${DOMAIN}证书,保存到:${CLR_NO}${CERT_ARCHIVE}"
         update_cert 
     fi
     result=$?
@@ -150,14 +150,15 @@ function main()
 
     # 处理默认证书
     wait
-    if [ "${DESC}" == "default" ]; then
-    	echo -e "${CLR_YL}复制证书到默认目录:${CLR_NO}${CERT_FOLDER}/system/default"
-	    cp ${CERT_ARCHIVE}/*.pem ${CERT_FOLDER}/system/default
-	    # 处理反代
-	    wait
-	    echo -e "${CLR_YL}复制证书到反代目录:${CLR_NO}${CERT_FOLDER}/ReverseProxy"
-      cp_reverseproxy
-	  fi
+    if [ "${NAME}" == "default" ]; then
+        echo -e "${CLR_YL}复制证书到默认目录:${CLR_NO}${CERT_FOLDER}/system/default"
+        cp ${CERT_ARCHIVE}/*.pem ${CERT_FOLDER}/system/default
+    fi
+    
+    # 处理反代证书
+    wait
+    echo -e "${CLR_YL}复制证书到反代目录:${CLR_NO}${CERT_FOLDER}/ReverseProxy"
+    cp_reverseproxy
 
     # 重启Nginx
     wait
@@ -184,7 +185,7 @@ while getopts "d:fhn:m:" arg_all; do
             echo -e $HELP
             exit $EXIT_ICLR_NOORRECTprompt=0 ;;
         n)
-						NAME=$OPTARG ;;
+            NAME=$OPTARG ;;
         m)
             if [ "$OPTARG" == "create" ]; then
                 MODE=0
@@ -202,7 +203,7 @@ while getopts "d:fhn:m:" arg_all; do
 done
 
 if [ "${DOMAIN}" == "" ]; then
-	  echo -e "${CLR_RD}[Fault]${CLR_NO} -d 域名参数输入错误, 请输入 '-d [域名]'"
+      echo -e "${CLR_RD}[Fault]${CLR_NO} -d 域名参数输入错误, 请输入 '-d [域名]'"
     exit $EXIT_FAILURE
 fi
 

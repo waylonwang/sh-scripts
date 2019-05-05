@@ -65,7 +65,12 @@ function parse_cert_id()
     else
     	  CERT_ID=`cat ${CERT_FOLDER}/_archive/DEFAULT`
     fi
-    CERT_ARCHIVE=${CERT_FOLDER}/_archive/${CERT_ID}
+    if [ "${CERT_ID}" != "" ]; then
+        CERT_ARCHIVE=${CERT_FOLDER}/_archive/${CERT_ID}
+    else
+        echo -e "${CLR_RD}[Fault]${CLR_NO} -n 名称参数输入错误,未找到对应的描述, 请输入 '-n [名称(描述)]'"
+        exit $EXIT_FAILURE
+    fi
 }
 
 function create_cert()
@@ -198,7 +203,7 @@ done
 
 if [ "${DOMAIN}" == "" ]; then
 	  echo -e "${CLR_RD}[Fault]${CLR_NO} -d 域名参数输入错误, 请输入 '-d [域名]'"
-    exit $EXIT_FAILURE ;;
+    exit $EXIT_FAILURE
 fi
 
 shift $((OPTIND-1))

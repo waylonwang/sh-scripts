@@ -121,10 +121,10 @@ function cp_reverseproxy()
 function main()
 {
     # 获取证书
-    if [ "$1" = "-c" -o "$1" = "--create" ]; then
+    if [ "${MODE}" -eq 0 ]; then
     	  echo -e "${CLR_YL}开始创建${DOMAIN}证书,保存到:${CLR_NO}${CERT_ARCHIVE}"
         create_cert
-    elif [ "$1" = "-u" -o "$1" = "--update" ]; then
+    else
     	  echo  -e "${CLR_YL}开始更新${DOMAIN}证书,保存到:${CLR_NO}${CERT_ARCHIVE}"
         update_cert 
     fi
@@ -160,7 +160,7 @@ function main()
     synoservicectl --reload nginx
 
     # 结束提示
-    if [ $mode -eq 0 ];then
+    if [ ${MODE} -eq 0 ];then
         echo -e "${CLR_YL}证书创建完成!${CLR_NO}"
     else
         echo -e "${CLR_YL}证书更新完成!${CLR_NO}"

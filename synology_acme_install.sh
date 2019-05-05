@@ -46,74 +46,88 @@ ACME_CONFIG_HOME="${ACME_PATH}/config"
 # CERT_ARCHIVE="/usr/syno/etc/certificate/_archive/$(cat /usr/syno/etc/certificate/_archive/DEFAULT)"
 # CERT_REVERSEPROXY="/usr/syno/etc/certificate/ReverseProxy"
 CERT_FOLDER="/usr/syno/etc/certificate"
+CERT_ID=""
+CERT_ARCHIVE=""
+# 输入参数解析的变量
+FORCE=1 
+MODE=1 
+DESC="default"
 
-force=1 
-mode=1 
-desc=""
   
-function parse_json()
+function parse_cert_id()
 {
     if [ ! -f "JSON.sh" ]; then
         curl -O -s https://raw.githubusercontent.com/dominictarr/JSON.sh/master/JSON.sh
         chmod +x JSON.sh
     fi
-    if [ "$desc" != "" ]; then
-        id=`cat ${CERT_FOLDER}/_archive/INFO | ./JSON.sh | grep '\[".*","desc"\].*"from LE"' | sed -r 's/\["(.*)",.*/\1/'`
+    if [ "${DESC}" != "default" ]; then
+        CERT_ID=`cat ${CERT_FOLDER}/_archive/INFO | ./JSON.sh | grep '\[".*","desc"\].*"${DESC}"' | sed -r 's/\["(.*)",.*/\1/'`
     else
-    	  id=`cat ${CERT_FOLDER}/_archive/DEFAULT`
+    	  CERT_ID=`cat ${CERT_FOLDER}/_archive/DEFAULT`
     fi
-    echo ${CERT_FOLDER}/_archive/$id
+    CERT_ARCHIVE=${CERT_FOLDER}/_archive/${CERT_ID}
+}
+
+function create_cert()
+{
+    $ACME_PATH/acme.sh --issue -d $DOMAIN -d *.$DOMAIN --dns $DNS \
+            --certpath $CERT_ARCHIVE/cert.pem \
+            --keypath $CERT_ARCHIVE/privkey.pem \
+            --fullchainpath $CERT_ARCHIVE/fullchain.pem \
+            --capath $CERT_ARCHIVE/chain.pem \
+            --home $ACME_PATH \
+            --config-home $ACME_CONFIG_HOME \
+            --dnssleep 20 
+    return $?
+}
+
+function update_cert()
+{
+    if [ "$FORCE" == 0 ]; then
+        $ACME_PATH/ acme.sh --renew -d $DOMAIN -d *.$DOMAIN \
+            --certpath $CERT_ARCHIVE/cert.pem \
+            --keypath $CERT_ARCHIVE/privkey.pem \
+            --fullchainpath $CERT_ARCHIVE/fullchain.pem \
+            --capath $CERT_ARCHIVE/chain.pem \
+            --home $ACME_PATH \
+            --config-home $ACME_CONFIG_HOME \
+            --dnssleep 20 \
+            --force
+    else    
+        $ACME_PATH/acme.sh --renew -d $DOMAIN -d *.$DOMAIN \
+            --certpath $CERT_ARCHIVE/cert.pem \
+            --keypath $CERT_ARCHIVE/privkey.pem \
+            --fullchainpath $CERT_ARCHIVE/fullchain.pem \
+            --capath $CERT_ARCHIVE/chain.pem \
+            --home $ACME_PATH \
+            --config-home $ACME_CONFIG_HOME \
+            --dnssleep 20 
+    fi
+    return $?
+}
+
+function cp_reverseproxy()
+{
+    for file in `ls ${CERT_FOLDER}/ReverseProxy`
+    do
+        if [ -d ${CERT_FOLDER}"/ReverseProxy/"$file ]
+        then
+            cp $CERT_ARCHIVE/*.pem ${CERT_FOLDER}/ReverseProxy/$file
+        fi
+    done	
 }
 
 function main()
 {
     # 获取证书
-    if [ "$1" = "-c" -o "$1" = "--create" ];then
-        echo -e "${CLR_YL}开始创建${DOMAIN}证书${CLR_NO}"
-        action=1
-        $ACME_PATH/acme.sh --issue -d $DOMAIN -d *.$DOMAIN --dns $DNS \
-                --certpath $CERT_FOLDER/cert.pem \
-                --keypath $CERT_FOLDER/privkey.pem \
-                --fullchainpath $CERT_FOLDER/fullchain.pem \
-                --capath $CERT_FOLDER/chain.pem \
-                --home $ACME_PATH \
-                --config-home $ACME_CONFIG_HOME \
-                --dnssleep 20 
-        result=$?
-    elif [ "$1" = "-u" -o "$1" = "--update" ];then
-        echo  -e "${CLR_YL}开始更新${DOMAIN}证书${CLR_NO}"
-        action=0
-        if [ "$2" = "--force" -o "$2" = "-f" ];then
-            $ACME_PATH/ acme.sh --renew -d $DOMAIN -d *.$DOMAIN \
-                --certpath $CERT_FOLDER/cert.pem \
-                --keypath $CERT_FOLDER/privkey.pem \
-                --fullchainpath $CERT_FOLDER/fullchain.pem \
-                --capath $CERT_FOLDER/chain.pem \
-                --home $ACME_PATH \
-                --config-home $ACME_CONFIG_HOME \
-                --dnssleep 20 \
-                --force
-            result=$?
-        else    
-            $ACME_PATH/acme.sh --renew -d $DOMAIN -d *.$DOMAIN \
-                --certpath $CERT_FOLDER/cert.pem \
-                --keypath $CERT_FOLDER/privkey.pem \
-                --fullchainpath $CERT_FOLDER/fullchain.pem \
-                --capath $CERT_FOLDER/chain.pem \
-                --home $ACME_PATH \
-                --config-home $ACME_CONFIG_HOME \
-                --dnssleep 20 
-            result=$?
-        fi
-    elif [ "$1" = "-h" -o "$1" = "--help" ];then
-        echo  -e "${CLR_YL}${NAME} V${VER}\n${URL}${CLR_NO}"
-        echo -e $HELP
-        exit $EXIT_ICLR_NOORRECT
-    else
-        echo -e "${CLR_RD}请在执行语句中输入命令${CLR_NO}"
-        echo -e $HELP
-        exit $ EXIT_COMMAND_NOT_FOUND
+    if [ "$1" = "-c" -o "$1" = "--create" ]; then
+    	  echo -e "${CLR_YL}开始创建${DOMAIN}证书,保存到:${CLR_NO}${CERT_ARCHIVE}"
+        create_cert
+    elif [ "$1" = "-u" -o "$1" = "--update" ]; then
+    	  echo  -e "${CLR_YL}开始更新${DOMAIN}证书,保存到:${CLR_NO}${CERT_ARCHIVE}"
+        update_cert 
     fi
+    result=$?
 
     # 对获取证书的结果进行处理
     wait
@@ -128,20 +142,16 @@ function main()
         exit $EXIT_FAILURE
     fi
 
-    # 处理存档
+    # 处理默认证书
     wait
-    echo -e "${CLR_YL}复制证书到存档目录:${CLR_NO}${CERT_ARCHIVE}"
-    cp $CERT_FOLDER/*.pem $CERT_ARCHIVE
-    # 处理反代
-    wait
-    echo -e "${CLR_YL}复制证书到反代目录:${CLR_NO}${CERT_REVERSEPROXY}"
-    for file in `ls $CERT_REVERSEPROXY`
-    do
-        if [ -d $CERT_REVERSEPROXY"/"$file ]
-        then
-            cp $CERT_FOLDER/*.pem $CERT_REVERSEPROXY/$file
-        fi
-    done
+    if [ "${DESC}" == "default" ]; then
+    	echo -e "${CLR_YL}复制证书到默认目录:${CLR_NO}${CERT_FOLDER}/system/default"
+	    cp ${CERT_ARCHIVE}/*.pem ${CERT_FOLDER}/system/default
+	    # 处理反代
+	    wait
+	    echo -e "${CLR_YL}复制证书到反代目录:${CLR_NO}${CERT_FOLDER}/ReverseProxy"
+      cp_reverseproxy
+	  fi
 
     # 重启Nginx
     wait
@@ -149,7 +159,7 @@ function main()
     synoservicectl --reload nginx
 
     # 结束提示
-    if [ $action -eq 1 ];then
+    if [ $mode -eq 0 ];then
         echo -e "${CLR_YL}证书创建完成!${CLR_NO}"
     else
         echo -e "${CLR_YL}证书更新完成!${CLR_NO}"
@@ -160,18 +170,18 @@ function main()
 while getopts "d:fhm:" arg_all; do
     case $arg_all in
         d)
-            desc=$OPTARG ;;
+            DESC=$OPTARG ;;
         f)
-            force=0 ;;
+            FORCE=0 ;;
         h)
             echo -e "${CLR_YL}${NAME} V${VER}\n${URL}${CLR_NO}"
             echo -e $HELP
             exit $EXIT_ICLR_NOORRECTprompt=0 ;;
         m)
             if [ "$OPTARG" == "create" ]; then
-                mode=0
+                MODE=0
             elif [ "$OPTARG" == "update" ]; then
-                mode=1
+                MODE=1
             else
                 echo -e "${CLR_RD}[Fault]${CLR_NO} -m input error, unkonw argument, please input 'create' or 'update'"
                 exit  $EXIT_FAILURE
@@ -184,5 +194,6 @@ while getopts "d:fhm:" arg_all; do
 done
 shift $((OPTIND-1))
 
-parse_json
-#main
+parse_cert_id
+
+main

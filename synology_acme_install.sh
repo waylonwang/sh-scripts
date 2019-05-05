@@ -50,6 +50,8 @@ NAME="default"
 # 控制参数
 MODE=1 
 FORCE=1 
+# 其他参数
+INFO=""
 
 # 解析证书参数
 function parse_cert_id()
@@ -58,8 +60,11 @@ function parse_cert_id()
         curl -O -s https://raw.githubusercontent.com/dominictarr/JSON.sh/master/JSON.sh
         chmod +x JSON.sh
     fi
-    if [ "${NAME}" != "default" ]; then
-        CERT_ID=`cat ${CERT_FOLDER}/_archive/INFO | ./JSON.sh | grep '\[".*","desc"\].*"'${NAME}'"' | sed -r 's/\["(.*)",.*/\1/'`
+    if [ "${INFO}" == "" ]; then
+    	  INFO=`cat ${CERT_FOLDER}/_archive/INFO | ./JSON.sh`
+    fi
+    if [ "${NAME}" != "default" -a "${INFO}" != "" ]; then
+        CERT_ID=`${INFO} | grep '\[".*","desc"\].*"'${NAME}'"' | sed -r 's/\["(.*)",.*/\1/'`
     else
         CERT_ID=`cat ${CERT_FOLDER}/_archive/DEFAULT`
     fi
@@ -117,9 +122,9 @@ function cp_reverseproxy()
     local flag=""
     for file in `ls ${CERT_FOLDER}/ReverseProxy`
     do
-        flag=`cat /usr/syno/etc/certificate/_archive/INFO | ./JSON.sh | grep '\["'${CERT_ID}'","services",.*,"service"\].*"'${file}'"'`
+        flag=`${INFO} | grep '\["'${CERT_ID}'","services",.*,"service"\].*"'${file}'"'`
         if [ "${flag}" != "" ]; then
-        	  echo -e "${CLR_YL}复制证书到反代目录:${CLR_NO}${CERT_FOLDER}/ReverseProxy/${file}"
+        	  echo -e "${CLR_YL}处理目录:${CLR_NO}${CERT_FOLDER}/ReverseProxy/${file}"
             cp ${CERT_ARCHIVE}/*.pem ${CERT_FOLDER}/ReverseProxy/${file}
         fi
     done    

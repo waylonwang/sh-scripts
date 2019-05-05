@@ -117,8 +117,8 @@ function check_docker_install()
   [ "$is_install" != 0 -a "$install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Installing docker.${CLR_NO}"
   if [ "$(get_os)" == "centos" ]; then
   	[ "$is_install" != 0 -a "$install" = 0 ] && yum -y install docker
-  elif [ "$(get_os)" == "ubuntu" ]; then
-  	[ "$is_install" != 0 -a "$install" = 0  || "$(get_os)" == "debian" ] && apt-get install -y docker.io
+  elif [ "$(get_os)" == "ubuntu" -o "$(get_os)" == "debian" ]; then
+  	[ "$is_install" != 0 -a "$install" = 0 ] && apt-get install -y docker.io
   fi
 
   if [ "$is_install" != 0 -a "$install" = 0 ]; then 
@@ -166,7 +166,7 @@ function check_compose_install()
   [ "$is_install" != 0 -a "$install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Installing docker-compose.${CLR_NO}"
   if [ "$(get_os)" == "centos" ]; then
   	[ "$is_install" != 0 -a "$install" = 0 ] && curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
-  elif [ "$(get_os)" == "ubuntu" || "$(get_os)" == "debian" ]; then
+  elif [ "$(get_os)" == "ubuntu" -o "$(get_os)" == "debian" ]; then
   	[ "$is_install" != 0 -a "$install" = 0 ] && wget --no-check-certificate -O /usr/bin/docker-compose "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)"
   fi
   [ "$is_install" != 0 -a "$install" = 0 ] && chmod +x /usr/bin/docker-compose

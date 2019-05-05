@@ -119,6 +119,7 @@ function cp_reverseproxy()
     do
         flag=`cat /usr/syno/etc/certificate/_archive/INFO | ./JSON.sh | grep '\["'${CERT_ID}'","services",.*,"service"\].*"'${file}'"'`
         if [ "${flag}" != "" ]; then
+        	  echo -e "${CLR_YL}复制证书到反代目录:${CLR_NO}${CERT_FOLDER}/ReverseProxy/${file}"
             cp ${CERT_ARCHIVE}/*.pem ${CERT_FOLDER}/ReverseProxy/${file}
         fi
     done    

@@ -49,7 +49,7 @@ CERT_FOLDER="/usr/syno/etc/certificate"
 
 force=1 
 mode=1 
-desc=1
+desc=""
   
 function parse_json()
 {
@@ -57,7 +57,7 @@ function parse_json()
         curl -O -s https://raw.githubusercontent.com/dominictarr/JSON.sh/master/JSON.sh
         chmod +x JSON.sh
     fi
-    if [ "$desc" != 1 ]; then
+    if [ "$desc" != "" ]; then
         id=`cat ${CERT_FOLDER}/_archive/INFO | ./JSON.sh | grep '\[".*","desc"\].*"from LE"' | sed -r 's/\["(.*)",.*/\1/'`
     else
     	  id=`cat ${CERT_FOLDER}/_archive/DEFAULT`
@@ -184,4 +184,5 @@ while getopts "d:fhm:" arg_all; do
 done
 shift $((OPTIND-1))
 
+parse_json
 #main

@@ -28,7 +28,7 @@ HELP="用法: ./${NAME} <命令> [<参数>]\n
 \t--update,-u\t\t更新证书\n
 \t--help,-h\t\t显示本帮助\n
 参数:\n
-\t--force,-f\t\t更新证书时，忽略证书到期日强制更新
+\t--force,-f\t\t更新证书时，忽略证书到期日强制更新\n
 \t--desc,-d\t\t指定处理证书的对应的描述，如不指定则处理默认证书"
 # 颜色
 CLR_YL="\033[1;33m"
@@ -42,18 +42,27 @@ EXIT_COMMAND_NOT_FOUND=127
 # acme.sh配置文件路径
 ACME_CONFIG_HOME="${ACME_PATH}/config"
 # 证书存储路径
-CERT_FOLDER="/usr/syno/etc/certificate/system/default"
-CERT_ARCHIVE="/usr/syno/etc/certificate/_archive/$(cat /usr/syno/etc/certificate/_archive/DEFAULT)"
-CERT_REVERSEPROXY="/usr/syno/etc/certificate/ReverseProxy"
+# CERT_FOLDER="/usr/syno/etc/certificate/system/default"
+# CERT_ARCHIVE="/usr/syno/etc/certificate/_archive/$(cat /usr/syno/etc/certificate/_archive/DEFAULT)"
+# CERT_REVERSEPROXY="/usr/syno/etc/certificate/ReverseProxy"
+CERT_FOLDER="/usr/syno/etc/certificate"
 
+force=1 
+mode=1 
+desc=1
   
 function parse_json()
 {
-    if [ ! -f "JSON.sh" ];then
-        curl -O-s https://raw.githubusercontent.com/dominictarr/JSON.sh/master/JSON.sh
+    if [ ! -f "JSON.sh" ]; then
+        curl -O -s https://raw.githubusercontent.com/dominictarr/JSON.sh/master/JSON.sh
         chmod +x JSON.sh
     fi
-    cat /usr/syno/etc/certificate/_archive/INFO | ./JSON.sh
+    if [ "$desc" != 1 ]; then
+        id=`cat ${CERT_FOLDER}/_archive/INFO | ./JSON.sh | grep '\[".*","desc"\].*"from LE"' | sed -r 's/\["(.*)",.*/\1/'`
+    else
+    	  id=`cat ${CERT_FOLDER}/_archive/DEFAULT`
+    fi
+    echo ${CERT_FOLDER}/_archive/$id
 }
 
 function main()
@@ -147,7 +156,7 @@ function main()
     fi
 }
 
-force=1 mode=1 prompt=1 start=1 version=1 ret=1
+
 while getopts "d:fhm:" arg_all; do
     case $arg_all in
         d)
@@ -174,7 +183,5 @@ while getopts "d:fhm:" arg_all; do
       esac
 done
 shift $((OPTIND-1))
-
-parse_json
 
 #main

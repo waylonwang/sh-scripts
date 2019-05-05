@@ -117,8 +117,10 @@ function check_docker_install()
   [ "$is_install" != 0 -a "$install" = 0 -a "$prompt" = 0 ] && echo -e "${CLR_FG_YL}Installing docker.${CLR_NO}"
   if [ "$(get_os)" == "centos" ]; then
   	[ "$is_install" != 0 -a "$install" = 0 ] && yum -y install docker
-  elif [ "$(get_os)" == "ubuntu" -o "$(get_os)" == "debian" ]; then
+  elif [ "$(get_os)" == "ubuntu" ]; then
   	[ "$is_install" != 0 -a "$install" = 0 ] && apt-get install -y docker.io
+  elif [ "$(get_os)" == "debian" ]; then
+  	[ "$is_install" != 0 -a "$install" = 0 ] && apt-get install -y docker-ce
   fi
 
   if [ "$is_install" != 0 -a "$install" = 0 ]; then 

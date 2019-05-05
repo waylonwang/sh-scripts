@@ -49,129 +49,129 @@ CERT_REVERSEPROXY="/usr/syno/etc/certificate/ReverseProxy"
   
 function parse_json()
 {
-	if [ ! -f "JSON.sh" ];then
-		curl -O-s https://raw.githubusercontent.com/dominictarr/JSON.sh/master/JSON.sh
-		chmod +x JSON.sh
-	fi
+    if [ ! -f "JSON.sh" ];then
+        curl -O-s https://raw.githubusercontent.com/dominictarr/JSON.sh/master/JSON.sh
+        chmod +x JSON.sh
+    fi
 }
 
 function main()
 {
-	# 获取证书
-	if [ "$1" = "-c" -o "$1" = "--create" ];then
-		echo -e "${CLR_YL}开始创建${DOMAIN}证书${CLR_NO}"
-		action=1
-		$ACME_PATH/acme.sh --issue -d $DOMAIN -d *.$DOMAIN --dns $DNS \
-				--certpath $CERT_FOLDER/cert.pem \
-				--keypath $CERT_FOLDER/privkey.pem \
-				--fullchainpath $CERT_FOLDER/fullchain.pem \
-				--capath $CERT_FOLDER/chain.pem \
-				--home $ACME_PATH \
-				--config-home $ACME_CONFIG_HOME \
-				--dnssleep 20 
-		result=$?
-	elif [ "$1" = "-u" -o "$1" = "--update" ];then
-		echo  -e "${CLR_YL}开始更新${DOMAIN}证书${CLR_NO}"
-		action=0
-		if [ "$2" = "--force" -o "$2" = "-f" ];then
-			$ACME_PATH/ acme.sh --renew -d $DOMAIN -d *.$DOMAIN \
-				--certpath $CERT_FOLDER/cert.pem \
-				--keypath $CERT_FOLDER/privkey.pem \
-				--fullchainpath $CERT_FOLDER/fullchain.pem \
-				--capath $CERT_FOLDER/chain.pem \
-				--home $ACME_PATH \
-				--config-home $ACME_CONFIG_HOME \
-				--dnssleep 20 \
-				--force
-			result=$?
-		else	
-			$ACME_PATH/acme.sh --renew -d $DOMAIN -d *.$DOMAIN \
-				--certpath $CERT_FOLDER/cert.pem \
-				--keypath $CERT_FOLDER/privkey.pem \
-				--fullchainpath $CERT_FOLDER/fullchain.pem \
-				--capath $CERT_FOLDER/chain.pem \
-				--home $ACME_PATH \
-				--config-home $ACME_CONFIG_HOME \
-				--dnssleep 20 
-			result=$?
-		fi
-	elif [ "$1" = "-h" -o "$1" = "--help" ];then
-		echo  -e "${CLR_YL}${NAME} V${VER}\n${URL}${CLR_NO}"
-		echo -e $HELP
-		exit $EXIT_ICLR_NOORRECT
-	else
-		echo -e "${CLR_RD}请在执行语句中输入命令${CLR_NO}"
-		echo -e $HELP
-		exit $ EXIT_COMMAND_NOT_FOUND
-	fi
+    # 获取证书
+    if [ "$1" = "-c" -o "$1" = "--create" ];then
+        echo -e "${CLR_YL}开始创建${DOMAIN}证书${CLR_NO}"
+        action=1
+        $ACME_PATH/acme.sh --issue -d $DOMAIN -d *.$DOMAIN --dns $DNS \
+                --certpath $CERT_FOLDER/cert.pem \
+                --keypath $CERT_FOLDER/privkey.pem \
+                --fullchainpath $CERT_FOLDER/fullchain.pem \
+                --capath $CERT_FOLDER/chain.pem \
+                --home $ACME_PATH \
+                --config-home $ACME_CONFIG_HOME \
+                --dnssleep 20 
+        result=$?
+    elif [ "$1" = "-u" -o "$1" = "--update" ];then
+        echo  -e "${CLR_YL}开始更新${DOMAIN}证书${CLR_NO}"
+        action=0
+        if [ "$2" = "--force" -o "$2" = "-f" ];then
+            $ACME_PATH/ acme.sh --renew -d $DOMAIN -d *.$DOMAIN \
+                --certpath $CERT_FOLDER/cert.pem \
+                --keypath $CERT_FOLDER/privkey.pem \
+                --fullchainpath $CERT_FOLDER/fullchain.pem \
+                --capath $CERT_FOLDER/chain.pem \
+                --home $ACME_PATH \
+                --config-home $ACME_CONFIG_HOME \
+                --dnssleep 20 \
+                --force
+            result=$?
+        else    
+            $ACME_PATH/acme.sh --renew -d $DOMAIN -d *.$DOMAIN \
+                --certpath $CERT_FOLDER/cert.pem \
+                --keypath $CERT_FOLDER/privkey.pem \
+                --fullchainpath $CERT_FOLDER/fullchain.pem \
+                --capath $CERT_FOLDER/chain.pem \
+                --home $ACME_PATH \
+                --config-home $ACME_CONFIG_HOME \
+                --dnssleep 20 
+            result=$?
+        fi
+    elif [ "$1" = "-h" -o "$1" = "--help" ];then
+        echo  -e "${CLR_YL}${NAME} V${VER}\n${URL}${CLR_NO}"
+        echo -e $HELP
+        exit $EXIT_ICLR_NOORRECT
+    else
+        echo -e "${CLR_RD}请在执行语句中输入命令${CLR_NO}"
+        echo -e $HELP
+        exit $ EXIT_COMMAND_NOT_FOUND
+    fi
 
-	# 对获取证书的结果进行处理
-	wait
-	if [ $result -eq 1 ];then
-		echo -e "${CLR_RD}结束,未获取到有效的证书!${CLR_NO}"
-		exit $EXIT_FAILURE
-	elif [ $result -eq 2 ];then
-		echo -e "${CLR_RD}忽略,未到更新时间!${CLR_NO}"
-		exit $EXIT_ICLR_NOORRECT
-	elif [ $result -ne 0 ];then
-		echo -e "${CLR_RD}异常,证书获取异常!${CLR_NO}"
-		exit $EXIT_FAILURE
-	fi
+    # 对获取证书的结果进行处理
+    wait
+    if [ $result -eq 1 ];then
+        echo -e "${CLR_RD}结束,未获取到有效的证书!${CLR_NO}"
+        exit $EXIT_FAILURE
+    elif [ $result -eq 2 ];then
+        echo -e "${CLR_RD}忽略,未到更新时间!${CLR_NO}"
+        exit $EXIT_ICLR_NOORRECT
+    elif [ $result -ne 0 ];then
+        echo -e "${CLR_RD}异常,证书获取异常!${CLR_NO}"
+        exit $EXIT_FAILURE
+    fi
 
-	# 处理存档
-	wait
-	echo -e "${CLR_YL}复制证书到存档目录:${CLR_NO}${CERT_ARCHIVE}"
-	cp $CERT_FOLDER/*.pem $CERT_ARCHIVE
-	# 处理反代
-	wait
-	echo -e "${CLR_YL}复制证书到反代目录:${CLR_NO}${CERT_REVERSEPROXY}"
-	for file in `ls $CERT_REVERSEPROXY`
-	do
-		if [ -d $CERT_REVERSEPROXY"/"$file ]
-		then
-			cp $CERT_FOLDER/*.pem $CERT_REVERSEPROXY/$file
-		fi
-	done
+    # 处理存档
+    wait
+    echo -e "${CLR_YL}复制证书到存档目录:${CLR_NO}${CERT_ARCHIVE}"
+    cp $CERT_FOLDER/*.pem $CERT_ARCHIVE
+    # 处理反代
+    wait
+    echo -e "${CLR_YL}复制证书到反代目录:${CLR_NO}${CERT_REVERSEPROXY}"
+    for file in `ls $CERT_REVERSEPROXY`
+    do
+        if [ -d $CERT_REVERSEPROXY"/"$file ]
+        then
+            cp $CERT_FOLDER/*.pem $CERT_REVERSEPROXY/$file
+        fi
+    done
 
-	# 重启Nginx
-	wait
-	echo -e "${CLR_YL}重新加载Nginx${CLR_NO}"
-	synoservicectl --reload nginx
+    # 重启Nginx
+    wait
+    echo -e "${CLR_YL}重新加载Nginx${CLR_NO}"
+    synoservicectl --reload nginx
 
-	# 结束提示
-	if [ $action -eq 1 ];then
-		echo -e "${CLR_YL}证书创建完成!${CLR_NO}"
-	else
-		echo -e "${CLR_YL}证书更新完成!${CLR_NO}"
-	fi
+    # 结束提示
+    if [ $action -eq 1 ];then
+        echo -e "${CLR_YL}证书创建完成!${CLR_NO}"
+    else
+        echo -e "${CLR_YL}证书更新完成!${CLR_NO}"
+    fi
 }
 
-local force=1 mode=1 prompt=1 start=1 version=1 ret=1
+force=1 mode=1 prompt=1 start=1 version=1 ret=1
 OPTIND OPTARG arg_all
 while getopts "d:fhm:" arg_all; do
-	case $arg_all in
-		d)
-			desc=$OPTARG ;;
-		f)
-			force=0 ;;
-		h)
-			echo -e "${CLR_YL}${NAME} V${VER}\n${URL}${CLR_NO}"
-			echo -e $HELP
-			exit $EXIT_ICLR_NOORRECTprompt=0 ;;
-		m)
-			if [ "$OPTARG" == "create" ]; then
-				mode=0
-			elif [ "$OPTARG" == "update" ]; then
-				mode=1
-			else
-				echo "unkonw argument"
-            			exit  $EXIT_FAILURE
-			fi
-			;;
-		?)
-			echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} input error, unkonw argument"
-			exit $EXIT_FAILURE ;;
-  	esac
+    case $arg_all in
+        d)
+            desc=$OPTARG ;;
+        f)
+            force=0 ;;
+        h)
+            echo -e "${CLR_YL}${NAME} V${VER}\n${URL}${CLR_NO}"
+            echo -e $HELP
+            exit $EXIT_ICLR_NOORRECTprompt=0 ;;
+        m)
+            if [ "$OPTARG" == "create" ]; then
+                mode=0
+            elif [ "$OPTARG" == "update" ]; then
+                mode=1
+            else
+                echo "unkonw argument"
+                        exit  $EXIT_FAILURE
+            fi
+            ;;
+        ?)
+            echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} input error, unkonw argument"
+            exit $EXIT_FAILURE ;;
+      esac
 done
 shift $((OPTIND-1))
 

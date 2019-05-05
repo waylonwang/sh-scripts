@@ -13,8 +13,6 @@
 export CX_Key="ChangeToYourKey"
 export CX_Secret="ChangeToYourSecret"
 DNS="dns_cx"
-# 修改以下内容为自己所拥有的域名名称，LE已支持泛域名证书，只需填写域名名称即可
-DOMAIN="ChangeToYourDomain"
 # 修改以下内容为自己安装的acme.sh的路径，如采用默认安装路径则无须修改
 ACME_PATH="/usr/local/share/acme.sh"
 
@@ -24,12 +22,13 @@ VER="1.0"
 URL="https://github.com/waylonwang/sh-scripts/synology_acme_install.sh"
 HELP="用法: ./${NAME} <命令> [<参数>]\n
 命令:\n
-\t--create,-c\t\t创建证书\n
-\t--update,-u\t\t更新证书\n
-\t--help,-h\t\t显示本帮助\n
+\t-m create\t\t模式：创建证书\n
+\t-m update\t\t模式：更新证书\n
+\t-h\t\t显示本帮助\n
 参数:\n
-\t--force,-f\t\t更新证书时，忽略证书到期日强制更新\n
-\t--desc,-d\t\t指定处理证书的对应的描述，如不指定则处理默认证书"
+\t-d [域名]\t\t指定处理证书的对应的域名\n
+\t-n [名称(描述)]\t\t指定处理证书的对应的名称(描述)，如不指定则处理默认证书\n
+\t-f\t\t更新证书时，忽略证书到期日强制更新"
 # 颜色
 CLR_YL="\033[1;33m"
 CLR_RD="\033[0;31m"
@@ -51,7 +50,8 @@ CERT_ARCHIVE=""
 # 输入参数解析的变量
 FORCE=1 
 MODE=1 
-DESC="default"
+NAME="default"
+DOMAIN=""
 
   
 function parse_cert_id()
@@ -60,8 +60,8 @@ function parse_cert_id()
         curl -O -s https://raw.githubusercontent.com/dominictarr/JSON.sh/master/JSON.sh
         chmod +x JSON.sh
     fi
-    if [ "${DESC}" != "default" ]; then
-        CERT_ID=`cat ${CERT_FOLDER}/_archive/INFO | ./JSON.sh | grep '\[".*","desc"\].*"${DESC}"' | sed -r 's/\["(.*)",.*/\1/'`
+    if [ "${NAME}" != "default" ]; then
+        CERT_ID=`cat ${CERT_FOLDER}/_archive/INFO | ./JSON.sh | grep '\[".*","desc"\].*"${NAME}"' | sed -r 's/\["(.*)",.*/\1/'`
     else
     	  CERT_ID=`cat ${CERT_FOLDER}/_archive/DEFAULT`
     fi
@@ -111,7 +111,7 @@ function cp_reverseproxy()
 		local flag=""
     for file in `ls ${CERT_FOLDER}/ReverseProxy`
     do
-    		flag=cat /usr/syno/etc/certificate/_archive/INFO | ./JSON.sh | grep '\["${CERT_ID}","services",.*,"service"\].*"${file}"'
+    		flag=`cat /usr/syno/etc/certificate/_archive/INFO | ./JSON.sh | grep '\["${CERT_ID}","services",.*,"service"\].*"${file}"'`
         if [ "${flag}" != "" ]; then
             cp ${CERT_ARCHIVE}/*.pem ${CERT_FOLDER}/ReverseProxy/${file}
         fi
@@ -168,31 +168,39 @@ function main()
 }
 
 
-while getopts "d:fhm:" arg_all; do
+while getopts "d:fhn:m:" arg_all; do
     case $arg_all in
         d)
-            DESC=$OPTARG ;;
+            DOMAIN=$OPTARG ;;
         f)
             FORCE=0 ;;
         h)
             echo -e "${CLR_YL}${NAME} V${VER}\n${URL}${CLR_NO}"
             echo -e $HELP
             exit $EXIT_ICLR_NOORRECTprompt=0 ;;
+        n)
+						NAME=$OPTARG ;;
         m)
             if [ "$OPTARG" == "create" ]; then
                 MODE=0
             elif [ "$OPTARG" == "update" ]; then
                 MODE=1
             else
-                echo -e "${CLR_RD}[Fault]${CLR_NO} -m input error, unkonw argument, please input 'create' or 'update'"
+                echo -e "${CLR_RD}[Fault]${CLR_NO} -m 模式命令输入错误, 请输入'-m create' 或 '-m update'"
                 exit  $EXIT_FAILURE
             fi
             ;;
         ?)
-            echo -e "${CLR_RD}[Fault]${CLR_NO} input error, unkonw argument"
+            echo -e "${CLR_RD}[Fault]${CLR_NO} 输入错误, 未知的参数"
             exit $EXIT_FAILURE ;;
       esac
 done
+
+if [ "${DOMAIN}" == "" ]; then
+	  echo -e "${CLR_RD}[Fault]${CLR_NO} -d 域名参数输入错误, 请输入 '-d [域名]'"
+    exit $EXIT_FAILURE ;;
+fi
+
 shift $((OPTIND-1))
 
 parse_cert_id

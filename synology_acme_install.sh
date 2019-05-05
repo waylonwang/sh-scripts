@@ -53,6 +53,7 @@ function parse_json()
         curl -O-s https://raw.githubusercontent.com/dominictarr/JSON.sh/master/JSON.sh
         chmod +x JSON.sh
     fi
+    cat /usr/syno/etc/certificate/_archive/INFO | ./JSON.sh
 }
 
 function main()
@@ -173,5 +174,7 @@ while getopts "d:fhm:" arg_all; do
       esac
 done
 shift $((OPTIND-1))
+
+parse_json
 
 #main

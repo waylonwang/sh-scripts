@@ -1,5 +1,5 @@
 #! /bin/bash
-# Copyright (c) 2018 Waylon Wang <waylon@waylon.wang>
+# Copyright (c) 2018-2019 Waylon Wang <waylon@waylon.wang>
 # Licensed under the MIT License
 
 #*************************************************************************************
@@ -147,7 +147,6 @@ function main()
 }
 
 force=1 mode=1 prompt=1 start=1 version=1 ret=1
-OPTIND OPTARG arg_all
 while getopts "d:fhm:" arg_all; do
     case $arg_all in
         d)
@@ -164,12 +163,12 @@ while getopts "d:fhm:" arg_all; do
             elif [ "$OPTARG" == "update" ]; then
                 mode=1
             else
-                echo "unkonw argument"
-                        exit  $EXIT_FAILURE
+                echo -e "${CLR_RD}[Fault]${CLR_NO} -m input error, unkonw argument, please input 'create' or 'update'"
+                exit  $EXIT_FAILURE
             fi
             ;;
         ?)
-            echo -e "${CLR_FG_BRD}[Fault]${CLR_NO} input error, unkonw argument"
+            echo -e "${CLR_RD}[Fault]${CLR_NO} input error, unkonw argument"
             exit $EXIT_FAILURE ;;
       esac
 done

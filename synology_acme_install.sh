@@ -154,7 +154,7 @@ function main()
         echo -e "${CLR_YL}复制证书到默认目录:${CLR_NO}${CERT_FOLDER}/system/default"
         cp ${CERT_ARCHIVE}/*.pem ${CERT_FOLDER}/system/default
     fi
-    
+
     # 处理反代证书
     wait
     echo -e "${CLR_YL}复制证书到反代目录:${CLR_NO}${CERT_FOLDER}/ReverseProxy"
@@ -201,13 +201,12 @@ while getopts "d:fhn:m:" arg_all; do
             exit $EXIT_FAILURE ;;
       esac
 done
+shift $((OPTIND-1))
 
 if [ "${DOMAIN}" == "" ]; then
       echo -e "${CLR_RD}[Fault]${CLR_NO} -d 域名参数输入错误, 请输入 '-d [域名]'"
     exit $EXIT_FAILURE
 fi
-
-shift $((OPTIND-1))
 
 parse_cert_id
 

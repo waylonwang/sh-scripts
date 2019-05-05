@@ -120,7 +120,7 @@ function check_docker_install()
   elif [ "$(get_os)" == "ubuntu" ]; then
   	[ "$is_install" != 0 -a "$install" = 0 ] && apt-get install -y docker.io
   elif [ "$(get_os)" == "debian" ]; then
-  	[ "$is_install" != 0 -a "$install" = 0 ] && apt-get install -y docker-ce
+  	[ "$is_install" != 0 -a "$install" = 0 ] && curl -fsSL https://get.docker.com -o get-docker.sh && chmod +x get-docker.sh && ./get-docker.sh
   fi
 
   if [ "$is_install" != 0 -a "$install" = 0 ]; then 

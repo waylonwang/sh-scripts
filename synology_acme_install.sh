@@ -108,11 +108,12 @@ function update_cert()
 
 function cp_reverseproxy()
 {
+		local flag=""
     for file in `ls ${CERT_FOLDER}/ReverseProxy`
     do
-        if [ -d ${CERT_FOLDER}"/ReverseProxy/"$file ]
-        then
-            cp $CERT_ARCHIVE/*.pem ${CERT_FOLDER}/ReverseProxy/$file
+    		flag=cat /usr/syno/etc/certificate/_archive/INFO | ./JSON.sh | grep '\["${CERT_ID}","services",.*,"service"\].*"${file}"'
+        if [ "${flag}" != "" ]; then
+            cp ${CERT_ARCHIVE}/*.pem ${CERT_FOLDER}/ReverseProxy/${file}
         fi
     done	
 }

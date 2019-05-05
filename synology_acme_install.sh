@@ -40,20 +40,18 @@ EXIT_ICLR_NOORRECT=2
 EXIT_COMMAND_NOT_FOUND=127
 # acme.sh配置文件路径
 ACME_CONFIG_HOME="${ACME_PATH}/config"
-# 证书存储路径
-# CERT_FOLDER="/usr/syno/etc/certificate/system/default"
-# CERT_ARCHIVE="/usr/syno/etc/certificate/_archive/$(cat /usr/syno/etc/certificate/_archive/DEFAULT)"
-# CERT_REVERSEPROXY="/usr/syno/etc/certificate/ReverseProxy"
+# 证书参数
 CERT_FOLDER="/usr/syno/etc/certificate"
 CERT_ID=""
 CERT_ARCHIVE=""
-# 输入参数解析的变量
-FORCE=1 
-MODE=1 
-NAME="default"
+# 域名参数
 DOMAIN=""
+NAME="default"
+# 控制参数
+MODE=1 
+FORCE=1 
 
-  
+# 解析证书参数
 function parse_cert_id()
 {
     if [ ! -f "JSON.sh" ]; then
@@ -63,7 +61,7 @@ function parse_cert_id()
     if [ "${NAME}" != "default" ]; then
         CERT_ID=`cat ${CERT_FOLDER}/_archive/INFO | ./JSON.sh | grep '\[".*","desc"\].*"'${NAME}'"' | sed -r 's/\["(.*)",.*/\1/'`
     else
-          CERT_ID=`cat ${CERT_FOLDER}/_archive/DEFAULT`
+        CERT_ID=`cat ${CERT_FOLDER}/_archive/DEFAULT`
     fi
     if [ "${CERT_ID}" != "" ]; then
         CERT_ARCHIVE=${CERT_FOLDER}/_archive/${CERT_ID}
@@ -73,6 +71,7 @@ function parse_cert_id()
     fi
 }
 
+# 创建证书
 function create_cert()
 {
     $ACME_PATH/acme.sh --issue -d $DOMAIN -d *.$DOMAIN --dns $DNS \
@@ -86,6 +85,7 @@ function create_cert()
     return $?
 }
 
+# 更新证书
 function update_cert()
 {
     if [ "$FORCE" == 0 ]; then
@@ -111,6 +111,7 @@ function update_cert()
     return $?
 }
 
+# 复制反代证书
 function cp_reverseproxy()
 {
     local flag=""
@@ -127,10 +128,10 @@ function main()
 {
     # 获取证书
     if [ "${MODE}" -eq 0 ]; then
-          echo -e "${CLR_YL}开始创建${DOMAIN}证书,保存到:${CLR_NO}${CERT_ARCHIVE}"
+        echo -e "${CLR_YL}开始创建${DOMAIN}证书,保存到:${CLR_NO}${CERT_ARCHIVE}"
         create_cert
     else
-          echo  -e "${CLR_YL}开始更新${DOMAIN}证书,保存到:${CLR_NO}${CERT_ARCHIVE}"
+        echo  -e "${CLR_YL}开始更新${DOMAIN}证书,保存到:${CLR_NO}${CERT_ARCHIVE}"
         update_cert 
     fi
     result=$?
@@ -204,7 +205,7 @@ done
 shift $((OPTIND-1))
 
 if [ "${DOMAIN}" == "" ]; then
-      echo -e "${CLR_RD}[Fault]${CLR_NO} -d 域名参数输入错误, 请输入 '-d [域名]'"
+    echo -e "${CLR_RD}[Fault]${CLR_NO} -d 域名参数输入错误, 请输入 '-d [域名]'"
     exit $EXIT_FAILURE
 fi
 

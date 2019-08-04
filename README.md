@@ -125,7 +125,7 @@ curl -O https://raw.githubusercontent.com/waylonwang/sh-scripts/master/synology_
 
 chmod +x synology_acme_install.sh
 
-./synology_acme_install.sh --create
+./synology_acme_install.sh  -m create -d domain.com -n cert_name
 ```
 
 ### Proxmox VE管理关功能

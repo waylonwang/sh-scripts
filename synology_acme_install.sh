@@ -51,6 +51,7 @@ NAME="default"
 # 控制参数
 MODE=1 
 FORCE=1 
+DEBUG=1
 # 其他参数
 INFO=""
 
@@ -80,14 +81,24 @@ function parse_cert_id()
 # 创建证书
 function create_cert()
 {
-    $ACME_PATH/acme.sh --issue -d $DOMAIN -d *.$DOMAIN --dns $DNS \
-            --certpath $CERT_ARCHIVE/cert.pem \
-            --keypath $CERT_ARCHIVE/privkey.pem \
-            --fullchainpath $CERT_ARCHIVE/fullchain.pem \
-            --capath $CERT_ARCHIVE/chain.pem \
-            --home $ACME_PATH \
-            --config-home $ACME_CONFIG_HOME \
-            --dnssleep 20 
+    if [ "$DEBUG" == 0 ]; then
+        $ACME_PATH/acme.sh --issue --debug -d $DOMAIN -d *.$DOMAIN --dns $DNS \
+                --certpath $CERT_ARCHIVE/cert.pem \
+                --keypath $CERT_ARCHIVE/privkey.pem \
+                --fullchainpath $CERT_ARCHIVE/fullchain.pem \
+                --capath $CERT_ARCHIVE/chain.pem \
+                --home $ACME_PATH \
+                --config-home $ACME_CONFIG_HOME \
+                --dnssleep 20 
+    else
+        $ACME_PATH/acme.sh --issue -d $DOMAIN -d *.$DOMAIN --dns $DNS \
+                --certpath $CERT_ARCHIVE/cert.pem \
+                --keypath $CERT_ARCHIVE/privkey.pem \
+                --fullchainpath $CERT_ARCHIVE/fullchain.pem \
+                --capath $CERT_ARCHIVE/chain.pem \
+                --home $ACME_PATH \
+                --config-home $ACME_CONFIG_HOME \
+                --dnssleep 20     
     return $?
 }
 
@@ -95,24 +106,45 @@ function create_cert()
 function update_cert()
 {
     if [ "$FORCE" == 0 ]; then
-        $ACME_PATH/ acme.sh --renew -d $DOMAIN -d *.$DOMAIN \
-            --certpath $CERT_ARCHIVE/cert.pem \
-            --keypath $CERT_ARCHIVE/privkey.pem \
-            --fullchainpath $CERT_ARCHIVE/fullchain.pem \
-            --capath $CERT_ARCHIVE/chain.pem \
-            --home $ACME_PATH \
-            --config-home $ACME_CONFIG_HOME \
-            --dnssleep 20 \
-            --force
+        if [ "$DEBUG" == 0 ]; then
+            $ACME_PATH/ acme.sh --renew --debug -d $DOMAIN -d *.$DOMAIN \
+                --certpath $CERT_ARCHIVE/cert.pem \
+                --keypath $CERT_ARCHIVE/privkey.pem \
+                --fullchainpath $CERT_ARCHIVE/fullchain.pem \
+                --capath $CERT_ARCHIVE/chain.pem \
+                --home $ACME_PATH \
+                --config-home $ACME_CONFIG_HOME \
+                --dnssleep 20 \
+                --force
+         else
+            $ACME_PATH/ acme.sh --renew -d $DOMAIN -d *.$DOMAIN \
+                --certpath $CERT_ARCHIVE/cert.pem \
+                --keypath $CERT_ARCHIVE/privkey.pem \
+                --fullchainpath $CERT_ARCHIVE/fullchain.pem \
+                --capath $CERT_ARCHIVE/chain.pem \
+                --home $ACME_PATH \
+                --config-home $ACME_CONFIG_HOME \
+                --dnssleep 20 \
+                --force         
     else    
-        $ACME_PATH/acme.sh --renew -d $DOMAIN -d *.$DOMAIN \
-            --certpath $CERT_ARCHIVE/cert.pem \
-            --keypath $CERT_ARCHIVE/privkey.pem \
-            --fullchainpath $CERT_ARCHIVE/fullchain.pem \
-            --capath $CERT_ARCHIVE/chain.pem \
-            --home $ACME_PATH \
-            --config-home $ACME_CONFIG_HOME \
-            --dnssleep 20 
+        if [ "$DEBUG" == 0 ]; then
+            $ACME_PATH/acme.sh --renew -d $DOMAIN -d *.$DOMAIN \
+                --certpath $CERT_ARCHIVE/cert.pem \
+                --keypath $CERT_ARCHIVE/privkey.pem \
+                --fullchainpath $CERT_ARCHIVE/fullchain.pem \
+                --capath $CERT_ARCHIVE/chain.pem \
+                --home $ACME_PATH \
+                --config-home $ACME_CONFIG_HOME \
+                --dnssleep 20 
+        else
+            $ACME_PATH/acme.sh --renew --debug -d $DOMAIN -d *.$DOMAIN \
+                --certpath $CERT_ARCHIVE/cert.pem \
+                --keypath $CERT_ARCHIVE/privkey.pem \
+                --fullchainpath $CERT_ARCHIVE/fullchain.pem \
+                --capath $CERT_ARCHIVE/chain.pem \
+                --home $ACME_PATH \
+                --config-home $ACME_CONFIG_HOME \
+                --dnssleep 20
     fi
     return $?
 }
@@ -188,6 +220,8 @@ while getopts "d:fhn:m:" arg_all; do
             DOMAIN=$OPTARG ;;
         f)
             FORCE=0 ;;
+        g)
+            DEBUG=0 ;;
         h)
             echo -e "${CLR_YL}${NAME} V${VER}\n${URL}${CLR_NO}"
             echo -e $HELP

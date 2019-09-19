@@ -57,13 +57,17 @@ check_docker_actived()
 create_nginx_conf()
 {
   local domain
-  local ip
+  local ip="127.0.0.1"
   local port
   read -p $'Input the \e[36mdomain name\e[0m of the server: ' domain
-  read -p $'Input the \e[36mlocal IP\e[0m of the server: ' ip
+  #read -p $'Input the \e[36mlocal IP\e[0m of the server: ' ip
   read -p $'Input the \e[36mlocal port\e[0m of the portainer service: ' port
   local file_name="nginx/conf/"$domain".conf"
-
+  
+  if [ ! $port ]; then
+    port="9000"
+  fi
+  
   echo "server {" >> $file_name
   echo "        listen          80;" >> $file_name
   echo "        server_name     "$domain";" >> $file_name

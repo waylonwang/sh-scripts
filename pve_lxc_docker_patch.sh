@@ -8,11 +8,15 @@
 #  - LXC容器中写入解除apparmor限制的配置项
 #  - 将非特权模式改为特权模式
 # 本脚本使用方法:
-#  wget --no-check-certificate https://raw.githubusercontent.com/waylonwang/sh-scripts/master/pve_lxc_docker_patch.sh && chmod +x pve_lxc_docker_patch.sh && ./pve_lxc_docker_patch.sh
+#  curl -L https://raw.githubusercontent.com/waylonwang/sh-scripts/master/pve_lxc_docker_patch.sh -o pve_lxc_docker_patch.sh && chmod +x pve_lxc_docker_patch.sh && ./pve_lxc_docker_patch.sh
 #
 # 作者:waylon@waylon.wang
 #*************************************************************************************
-source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_os_env.sh)
+# 如环境变量GIT_RAW_SH未设置则默认设为github地址
+[ -z ${GIT_RAW_SH} ] && GIT_RAW_SH="https://raw.githubusercontent.com/waylonwang/sh-scripts/master"
+# 变量GIT_RAW_SH设置完成
+
+source <(curl -s ${GIT_RAW_SH}/lib/check_os_env.sh)
 
 check_os -t "debian" -p
 

@@ -5,9 +5,14 @@
 #*************************************************************************************
 # 本脚本基于Neilpang/acme.sh，用于Synology NAS自动化创建或更新Let's Encrypt SSL证书
 # 本脚本适用于Synology DSM V6.x版本，仅支持ACME V2.0协议通过域名验证获取泛域名证书
+# 本脚本使用方法:
+#  curl -L https://raw.githubusercontent.com/waylonwang/sh-scripts/master/synology_acme_install.sh  -o synology_acme_install.sh && chmod +x synology_acme_install.sh && ./synology_acme_install.sh
 # 
 # 作者:waylon@waylon.wang
 #*************************************************************************************
+# 如环境变量GIT_RAW_SH未设置则默认设为github地址
+[ -z ${GIT_RAW_SH} ] && GIT_RAW_SH="https://raw.githubusercontent.com/waylonwang/sh-scripts/master"
+# 变量GIT_RAW_SH设置完成
 
 # 修改以下内容为自己的域名服务商信息，具体的DNS类型或环境变量名称请参见Neilpang/acme.sh
 export CX_Key="ChangeToYourKey"
@@ -19,7 +24,7 @@ ACME_PATH="/usr/local/share/acme.sh"
 # 以下为处理脚本，不理解的请勿随意修改
 NAME="installcert.sh"
 VER="1.0"
-URL="https://github.com/waylonwang/sh-scripts/synology_acme_install.sh"
+URL="${GIT_RAW_SH}/synology_acme_install.sh"
 HELP="用法: ./${NAME} <命令> [<参数>]\n
 命令:\n
 \t-m create\t\t模式：创建证书\n

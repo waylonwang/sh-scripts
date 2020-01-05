@@ -1,6 +1,19 @@
 # !/bin/bash
+# Copyright (c) 2019 Waylon Wang <waylon@waylon.wang>
+# Licensed under the MIT License
 
-[ -z $REF_CONFLICT_FLAG ] && source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/public_const.sh)
+#*************************************************************************************
+# 本脚本实现了在VPS中部署各种PHP服务
+# 本脚本使用方法:
+#  curl -L https://raw.githubusercontent.com/waylonwang/sh-scripts/master/vps_deploy_php.sh -o vps_deploy_php.sh && chmod +x vps_deploy_php.sh && ./vps_deploy_php.sh
+#
+# 作者:waylon@waylon.wang
+#*************************************************************************************
+# 如环境变量GIT_RAW_SH和GIT_RAW_DOCKER未设置则默认设为github地址
+[ -z ${GIT_RAW_SH} ] && GIT_RAW_SH="https://raw.githubusercontent.com/waylonwang/sh-scripts/master"
+[ -z ${GIT_RAW_DOCKER} ] && GIT_RAW_DOCKER="https://raw.githubusercontent.com/waylonwang/docker-compose/master"
+# 变量GIT_RAW_SH和GIT_RAW_DOCKER设置完成
+[ -z ${REF_CONFLICT_FLAG} ] && source <(curl -s ${GIT_RAW_SH}/lib/public_const.sh)
 
 function init_config_folder()
 {
@@ -8,7 +21,7 @@ function init_config_folder()
 
   cd docker
 
-  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_base_volumes.sh)
+  source <(curl -s ${GIT_RAW_SH}/lib/check_base_volumes.sh)
   check_php_volumes -c -p
 
   [ ! -e "./nginx/conf/portainer.conf" ] && add_nginx_conf -d "./nginx" -n "portainer" -p
@@ -18,11 +31,11 @@ function download_compose_file()
 {
   echo -e "${CLR_FG_YL}Downloading the latest compose files and scripts.${CLR_NO}"
   if [ "$(get_os)" = "raspbian" ]; then
-    curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/php_raspbian.yml
-    curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/compose_php.sh
+    curl -O -s ${GIT_RAW_DOCKER}/php_raspbian.yml
+    curl -O -s ${GIT_RAW_DOCKER}/compose_php.sh
   else
-    curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/php.yml
-    curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/compose_php.sh
+    curl -O -s ${GIT_RAW_DOCKER}/php.yml
+    curl -O -s ${GIT_RAW_DOCKER}/compose_php.sh
   fi
   echo -e "${CLR_FG_GR}[OK]${CLR_NO} compose files and scripts has downloaded."
 }
@@ -37,7 +50,7 @@ function compose_all_file()
 
 # master process
 function main(){
-  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_docker_env.sh)
+  source <(curl -s ${GIT_RAW_SH}/lib/check_docker_env.sh)
   echo -e "${CLR_FG_PU}Start deploying docker Service${CLR_NO}"
 
   check_os -t "centos,raspbian" -p

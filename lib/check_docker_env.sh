@@ -11,9 +11,12 @@
 # 
 # 作者:waylon@waylon.wang
 #*************************************************************************************
+# 如环境变量GIT_RAW_SH未设置则默认设为github地址
+[ -z ${GIT_RAW_SH} ] && GIT_RAW_SH="https://raw.githubusercontent.com/waylonwang/sh-scripts/master"
+# 变量GIT_RAW_SH设置完成
 
 # 获取OS环境
-source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_os_env.sh)
+source <(curl -s ${GIT_RAW_SH}/lib/check_os_env.sh)
 
 # 判断是否已经安装docker
 # 输入: 无

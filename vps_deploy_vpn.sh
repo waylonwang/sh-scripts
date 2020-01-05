@@ -1,4 +1,18 @@
 #! /bin/bash
+# Copyright (c) 2019 Waylon Wang <waylon@waylon.wang>
+# Licensed under the MIT License
+
+#*************************************************************************************
+# 本脚本实现了在VPS中部署各种VPN类服务
+# 本脚本使用方法:
+#  curl -L https://raw.githubusercontent.com/waylonwang/sh-scripts/master/vps_deploy_vpn.sh -o vps_deploy_vpn.sh && chmod +x vps_deploy_vpn.sh && ./vps_deploy_vpn.sh
+#
+# 作者:waylon@waylon.wang
+#*************************************************************************************
+# 如环境变量GIT_RAW_SH和GIT_RAW_DOCKER未设置则默认设为github地址
+[ -z ${GIT_RAW_SH} ] && GIT_RAW_SH="https://raw.githubusercontent.com/waylonwang/sh-scripts/master"
+[ -z ${GIT_RAW_DOCKER} ] && GIT_RAW_DOCKER="https://raw.githubusercontent.com/waylonwang/docker-compose/master"
+# 变量GIT_RAW_SH和GIT_RAW_DOCKER设置完成
 
 check_docker_installed()
 {
@@ -242,10 +256,10 @@ init_config_folder()
 download_compose_file()
 {
   echo -e "\033[33mDownloading the latest compose files and scripts.\033[0m"
-  curl -O https://raw.githubusercontent.com/waylonwang/docker-compose/master/base.yml
-  curl -O https://raw.githubusercontent.com/waylonwang/docker-compose/master/vpn.yml
-  curl -O https://raw.githubusercontent.com/waylonwang/docker-compose/master/compose_base.sh
-  curl -O https://raw.githubusercontent.com/waylonwang/docker-compose/master/compose_vpn.sh
+  curl -O ${GIT_RAW_DOCKER/base.yml
+  curl -O ${GIT_RAW_DOCKER/vpn.yml
+  curl -O ${GIT_RAW_DOCKER/compose_base.sh
+  curl -O ${GIT_RAW_DOCKER/compose_vpn.sh
   echo -e "\033[32m[OK] compose files and scripts has downloaded.\033[0m"
 }
 

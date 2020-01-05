@@ -1,6 +1,20 @@
 # !/bin/bash
+# Copyright (c) 2019 Waylon Wang <waylon@waylon.wang>
+# Licensed under the MIT License
 
-[ -z $REF_CONFLICT_FLAG ] && source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/public_const.sh)
+#*************************************************************************************
+# 本脚本实现了在树莓派中部署docker环境的脚本功能
+# 本脚本使用方法:
+#  curl -L https://raw.githubusercontent.com/waylonwang/sh-scripts/master/raspbian_deploy_docker.sh -o raspbian_deploy_docker.sh && chmod +x raspbian_deploy_docker.sh && ./raspbian_deploy_docker.sh
+# 
+# 作者:waylon@waylon.wang
+#*************************************************************************************
+# 如环境变量GIT_RAW_SH和GIT_RAW_DOCKER未设置则默认设为github地址
+[ -z ${GIT_RAW_SH} ] && GIT_RAW_SH="https://raw.githubusercontent.com/waylonwang/sh-scripts/master"
+[ -z ${GIT_RAW_DOCKER} ] && GIT_RAW_DOCKER="https://raw.githubusercontent.com/waylonwang/docker-compose/master"
+# 变量GIT_RAW_SH和GIT_RAW_DOCKER设置完成
+
+[ -z $REF_CONFLICT_FLAG ] && source <(curl -s ${GIT_RAW_SH}/lib/public_const.sh)
 
 function init_config_folder()
 {
@@ -8,13 +22,13 @@ function init_config_folder()
 
   cd docker
 
-  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_base_volumes.sh)
+  source <(curl -s ${GIT_RAW_SH}/lib/check_base_volumes.sh)
   check_portainer_volumes -c -p
   check_www_volumes -c -p
   check_nginx_volumes -c -p
   check_php_volumes -c -p
 
-  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_db_volumes.sh)
+  source <(curl -s ${GIT_RAW_SH}/lib/check_db_volumes.sh)
   check_mysql_volumes -c -p
   check_phpmyadmin_volumes -c -p
 
@@ -24,8 +38,8 @@ function init_config_folder()
 function download_compose_file()
 {
   echo -e "${CLR_FG_YL}Downloading the latest compose files and scripts.${CLR_NO}"
-  curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/base_raspbian.yml
-  curl -O -s https://raw.githubusercontent.com/waylonwang/docker-compose/master/compose_base_raspbian.sh
+  curl -O -s ${GIT_RAW_DOCKER}/base_raspbian.yml
+  curl -O -s ${GIT_RAW_DOCKER}/compose_base_raspbian.sh
   echo -e "${CLR_FG_GR}[OK]${CLR_NO} compose files and scripts has downloaded."
 }
 
@@ -39,7 +53,7 @@ function compose_all_file()
 
 # master process
 function main(){
-  source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_docker_env.sh)
+  source <(curl -s ${GIT_RAW_SH}/lib/check_docker_env.sh)
   echo -e "${CLR_FG_PU}Start deploying docker Service${CLR_NO}"
 
   check_os -t "raspbian" -p

@@ -5,11 +5,15 @@
 #*************************************************************************************
 # 本脚本实现了ubuntu、debian的apt源更改为阿里云镜像的脚本功能
 # 本脚本使用方法:
-#  wget --no-check-certificate https://raw.githubusercontent.com/waylonwang/sh-scripts/master/ubuntu_replace_aliyun_apt_repository.sh && chmod +x ubuntu_replace_aliyun_apt_repository.sh && ./ubuntu_replace_aliyun_apt_repository.sh
+#  curl -L https://raw.githubusercontent.com/waylonwang/sh-scripts/master/ubuntu_replace_aliyun_apt_repository.sh  -o ubuntu_replace_aliyun_apt_repository.sh && chmod +x ubuntu_replace_aliyun_apt_repository.sh && ./ubuntu_replace_aliyun_apt_repository.sh
 # 
 # 作者:waylon@waylon.wang
 #*************************************************************************************
-source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/check_os_env.sh)
+# 如环境变量GIT_RAW_SH未设置则默认设为github地址
+[ -z ${GIT_RAW_SH} ] && GIT_RAW_SH="https://raw.githubusercontent.com/waylonwang/sh-scripts/master"
+# 变量GIT_RAW_SH设置完成
+
+source <(curl -s ${GIT_RAW_SH}/lib/check_os_env.sh)
 #检查OS环境
 check_os -t "debian,ubuntu" -p
 

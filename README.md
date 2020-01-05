@@ -81,7 +81,7 @@ VPS一键部署docker环境的脚本，容器服务包含docker、docker-compose
 * nginx:alpine
 * portainer/portainer
 
-> 此脚本目前支持CentOS、Ubuntu操作系统
+> 此脚本目前支持RH系、Debian操作系统
 >
 > 此脚本由waylonwang/docker-compose的编排脚本及其sh执行脚本提供docker容器部署的支持
 > * base.yml
@@ -97,7 +97,7 @@ VPS一键部署数据库环境的脚本，数据库服务则包括mysql及phpmya
 * mariadb:latest
 * phpmyadmin/phpmyadmin:latest
 
-> 此脚本目前支持CentOS、Ubuntu操作系统
+> 此脚本目前支持RH系、Debian操作系统
 >
 > 此脚本由waylonwang/docker-compose的编排脚本及其sh执行脚本提供docker容器部署的支持
 > * base.yml
@@ -133,7 +133,7 @@ chmod +x synology_acme_install.sh
 #### pve_lxc_docker_patch.sh
 在PVE中解除apparmor限制，允许LXC容器中拉取docker镜像
 
-> 此脚本适用于PVE V5.x版本
+> 此脚本适用于PVE V5.x~V6.x版本
 >
 安装方法：
 
@@ -151,5 +151,5 @@ wget --no-check-certificate https://raw.githubusercontent.com/waylonwang/sh-scri
 安装方法：
 
 ```shell
-wget --no-check-certificate https://raw.githubusercontent.com/waylonwang/sh-scripts/master/ubuntu_replace_aliyun_apt_repository.sh && chmod +x ubuntu_replace_aliyun_apt_repository.sh && ./ubuntu_replace_aliyun_apt_repository.sh
+curl -L -O https://raw.githubusercontent.com/waylonwang/sh-scripts/master/ubuntu_replace_aliyun_apt_repository.sh && chmod +x ubuntu_replace_aliyun_apt_repository.sh && ./ubuntu_replace_aliyun_apt_repository.sh
 ```

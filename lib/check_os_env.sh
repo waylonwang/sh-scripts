@@ -10,9 +10,12 @@
 # 
 # 作者:waylon@waylon.wang
 #*************************************************************************************
+# 如环境变量GIT_RAW_SH未设置则默认设为github地址
+[ -z ${GIT_RAW_SH} ] && GIT_RAW_SH="https://raw.githubusercontent.com/waylonwang/sh-scripts/master"
+# 变量GIT_RAW_SH设置完成
 
 # 字体颜色
-[ -z $REF_CONFLICT_FLAG ] && source <(curl -s https://raw.githubusercontent.com/waylonwang/sh-scripts/master/lib/public_const.sh)
+[ -z $REF_CONFLICT_FLAG ] && source <(curl -s ${GIT_RAW_SH}/lib/public_const.sh)
 
 # 获取当前操作系统名称
 # 输入: 无

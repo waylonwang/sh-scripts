@@ -138,7 +138,7 @@ chmod +x synology_acme_install.sh
 安装方法：
 
 ```shell
-wget --no-check-certificate https://raw.githubusercontent.com/waylonwang/sh-scripts/master/pve_lxc_docker_patch.sh && chmod +x pve_lxc_docker_patch.sh && ./pve_lxc_docker_patch.sh
+curl -L -O https://raw.githubusercontent.com/waylonwang/sh-scripts/master/pve_lxc_docker_patch.sh && chmod +x pve_lxc_docker_patch.sh && ./pve_lxc_docker_patch.sh
 ```
 
 ### 其他通用功能
@@ -146,7 +146,7 @@ wget --no-check-certificate https://raw.githubusercontent.com/waylonwang/sh-scri
 #### ubuntu_replace_aliyun_apt_repository.sh
 将apt源更改为阿里云镜像
 
-> 此脚本适用于Ubuntu、Debian版本
+> 此脚本适用于RH系、Debian操作系统
 
 安装方法：
 

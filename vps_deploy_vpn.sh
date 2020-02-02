@@ -256,10 +256,10 @@ init_config_folder()
 download_compose_file()
 {
   echo -e "\033[33mDownloading the latest compose files and scripts.\033[0m"
-  curl -O ${GIT_RAW_DOCKER/base.yml
-  curl -O ${GIT_RAW_DOCKER/vpn.yml
-  curl -O ${GIT_RAW_DOCKER/compose_base.sh
-  curl -O ${GIT_RAW_DOCKER/compose_vpn.sh
+  curl -O ${GIT_RAW_DOCKER}/base.yml
+  curl -O ${GIT_RAW_DOCKER}/vpn.yml
+  curl -O ${GIT_RAW_DOCKER}/compose_base.sh
+  curl -O ${GIT_RAW_DOCKER}/compose_vpn.sh
   echo -e "\033[32m[OK] compose files and scripts has downloaded.\033[0m"
 }
 
